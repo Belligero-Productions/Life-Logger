@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	>
+	<Spinner android:id="@+id/spinner_selectEvent"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		/>
+	<TableLayout android:id="@+id/container_statistics"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:stretchColumns="1"
+		>
+		<TableRow>
+			<TextView
+				android:text="@string/stats_total"
+				/>
+			<TextView android:id="@+id/stats_total"
+				android:gravity="right"
+				android:text="0"
+				/>
+		</TableRow>
+		<TableRow>
+			<TextView
+				android:text="@string/stats_activeDailyAverage"
+				/>
+			<TextView android:id="@+id/stats_activeDailyAverage"
+				android:gravity="right"
+				android:text="0"
+				/>
+		</TableRow>
+		<TableRow>
+			<TextView
+				android:text="@string/stats_totalDailyAverage"
+				/>
+			<TextView android:id="@+id/stats_totalDailyAverage"
+				android:gravity="right"
+				android:text="0"
+				/>
+		</TableRow>
+	</TableLayout>
+</LinearLayout>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:stretchColumns="1">
+	<TableRow>
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="@string/header_active" />
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="@string/header_eventName"
+			android:layout_gravity="right" />
+	</TableRow>
+
+	<TableRow>
+		<CheckBox android:id="@+id/check_active1" />
+		<EditText android:id="@+id/edit_eventName1"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<CheckBox android:id="@+id/check_active2" />
+		<EditText android:id="@+id/edit_eventName2"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<CheckBox android:id="@+id/check_active3" />
+		<EditText android:id="@+id/edit_eventName3"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<CheckBox android:id="@+id/check_active4" />
+		<EditText android:id="@+id/edit_eventName4"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<CheckBox android:id="@+id/check_active5" />
+		<EditText android:id="@+id/edit_eventName5"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="1" />
+	</TableRow>
+</TableLayout>

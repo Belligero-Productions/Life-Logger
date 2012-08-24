@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, LifeLoggerMain!</string>
+    <string name="app_name">LifeLogger</string>
+    <string name="header_logButtons">Log Events</string>
+    <string name="view">View Recent</string>
+    <string name="edit_events">Edit Events</string>
+    <string name="header_active">Active</string>
+    <string name="header_eventName">Event Name</string>
+    <string name="events_updated">Events updated. Reloading...</string>
+    <string name="export_data">Export records to CSV</string>
+    <string name="stats">Statistics</string>
+    <string name="export_fileName">lifeLogger.csv</string>
+    <string name="export_button">Export selected records</string>
+    <string name="no_storage">External storage is not available</string>
+    <string name="export_complete">File was successfully exported</string>
+    <string name="export_error">An error occured writing the file</string>
+    
+    <!-- Tabs -->
+    <string name="tab_log">Log</string>
+    <string name="tab_export">Export</string>
+    <string name="tab_stats">Statistics</string>
+    
+    <!-- Statistics -->
+    <string name="stats_total">Total</string>
+    <string name="stats_totalDailyAverage">Total Daily Average</string>
+    <string name="stats_activeDailyAverage">Active Daily Average</string>
+    <string name="stats_weeklyAverage">Weekly Average</string>
+    <string name="stats_calculating">Calculating, please wait...</string>
+</resources>

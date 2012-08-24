@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	>
+    
+	<TableRow>
+		<CheckBox android:id="@+id/check_export1" />
+		<TextView android:id="@+id/text_exportName1"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<CheckBox android:id="@+id/check_export2" />
+		<TextView android:id="@+id/text_exportName2"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<CheckBox android:id="@+id/check_export3" />
+		<TextView android:id="@+id/text_exportName3"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<CheckBox android:id="@+id/check_export4" />
+		<TextView android:id="@+id/text_exportName4"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="1" />
+	</TableRow>
+	<TableRow>
+		<CheckBox android:id="@+id/check_export5" />
+		<TextView android:id="@+id/text_exportName5"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="1" />
+	</TableRow>
+	<EditText
+		android:id="@+id/edit_fileName"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/export_fileName"
+		/>
+	<Button
+		android:id="@+id/btn_exportData"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/export_button"
+			/>
+</TableLayout>
