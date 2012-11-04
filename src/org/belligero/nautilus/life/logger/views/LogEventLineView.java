@@ -2,26 +2,25 @@ package org.belligero.nautilus.life.logger.views;
 
 import org.belligero.nautilus.life.logger.LifeLoggerActivity;
 import org.belligero.nautilus.life.logger.R;
+import org.belligero.nautilus.life.logger.ojects.EventType;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
-public class EventButtonView extends RelativeLayout {
+public class LogEventLineView extends RelativeLayout {
 	public static final int BTN_LOG = 1,
 							BTN_VIEW = 2;
 	
-	private int _eventTypeID;
-	private String _eventName;
+	private EventType _eventType;
 	private LifeLoggerActivity _lifeLogger;
 	
-	public EventButtonView(Context context, int eventTypeID, String eventName) {
+	public LogEventLineView(Context context, EventType eventType) {
 		super(context);
-		addView(View.inflate(context, R.layout.view_log_buttons, null));
+		addView(View.inflate(context, R.layout.view_log_event_line, null));
 		
-		_eventTypeID = eventTypeID;
-		_eventName = eventName;
+		_eventType = eventType;
 		_lifeLogger = (LifeLoggerActivity)context;
 		
 		// Get our controls
@@ -30,7 +29,7 @@ public class EventButtonView extends RelativeLayout {
 		Button btn_viewRecent = (Button)this.findViewById(R.id.btn_viewRecent);
 		
 		// Set the text
-		text_eventName.setText(_eventName);
+		text_eventName.setText(eventType.getName());
 		
 		// Add the event handlers
 		btn_log.setOnClickListener(btnOnClickListener);
@@ -41,10 +40,10 @@ public class EventButtonView extends RelativeLayout {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.btn_log:
-				_lifeLogger.logEvent(_eventTypeID, _eventName);
+				_lifeLogger.logEvent(_eventType);
 				break;
 			case R.id.btn_viewRecent:
-				_lifeLogger.showRecent(_eventTypeID, _eventName);
+				_lifeLogger.showRecent(_eventType);
 				break;
 			default:
 				throw new RuntimeException("Unknown OnClick");

@@ -3,9 +3,13 @@ package org.belligero.nautilus.life.logger;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import org.belligero.nautilus.life.logger.ojects.Event;
+import org.belligero.nautilus.life.logger.ojects.EventIterator;
+import org.belligero.nautilus.life.logger.ojects.EventType;
+import org.belligero.nautilus.life.logger.ojects.EventTypeIterator;
 import org.belligero.nautilus.life.logger.utils.DatabaseAdapter;
 import org.belligero.nautilus.life.logger.utils.Utils;
-import org.belligero.nautilus.life.logger.views.EventButtonView;
+import org.belligero.nautilus.life.logger.views.LogEventLineView;
 import org.belligero.nautilus.life.logger.R;
 
 import android.app.Activity;
@@ -32,7 +36,6 @@ public class LifeLoggerActivity extends Activity {
 				_hour, _minute;
 	private DatabaseAdapter _dbHelper;
 	private LinearLayout _logButtons;
-	private HashMap<Integer, String> _idNameMapping;
 	
 	private static LifeLoggerActivity instance;
 
@@ -57,37 +60,36 @@ public class LifeLoggerActivity extends Activity {
 	}
 	
 	/*************************************** Public Functions ******************************************/
-	public void logEvent(int id, String eventText) {
+	public void logEvent(EventType eventType) {
 		String date = Utils.getDateString(_year, _month, _day);
 		String time = Utils.getTimeString(_hour, _minute);
 		
-		String text = date + " " + time + ": " + eventText + "\n" + text_recent.getText();
+		String text = date + " " + time + ": "
+					+ eventType.getName()
+					+ "\n" + text_recent.getText();
 		text_recent.setText(text);
 		
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(_year, _month, _day, _hour, _minute, 0);
 		long timeStamp = cal.getTimeInMillis()/1000;
-		_dbHelper.insertEvent(id, (int)timeStamp);
+		_dbHelper.insertEvent(eventType.getID(), (int)timeStamp);
 	}
 	
-	public void showRecent(int id, String eventText) {
+	public void showRecent(EventType eventType) {
 		Calendar cal = Calendar.getInstance();
 		StringBuilder eventString = new StringBuilder();
 		
-		Cursor cursor = _dbHelper.fetchRecentEvents(id);
+		EventIterator iterator = _dbHelper.fetchRecentEvents(eventType.getID());
 		// TODO move this into a function so no duplication
-		if (cursor.moveToFirst()) {
-			do {
-				long timeStamp = cursor.getInt(cursor.getColumnIndex(DatabaseAdapter.KEY_EVENT_TIME));
-				int eventType = cursor.getInt(cursor.getColumnIndex(DatabaseAdapter.KEY_EVENT_TYPE));
-				
-				cal.setTimeInMillis(timeStamp*1000);
-				String typeName = _idNameMapping.get(eventType);
-				eventString.append(Utils.getDateString(cal)+ " " + Utils.getTimeString(cal) + ": " + typeName + "\n");
-			} while (cursor.moveToNext());
+		for (Event event : iterator) {
+			cal.setTimeInMillis(event.getTimeStamp() * 1000);
+			eventString.append(
+					Utils.getDateString(cal) + " "
+					+ Utils.getTimeString(cal) + ": "
+					+ eventType.getName() + "\n"
+				);
 		}
-		cursor.close();
 		this.text_recent.setText(eventString);
 	}
 	
@@ -99,41 +101,33 @@ public class LifeLoggerActivity extends Activity {
 	private void loadData() {
 		if (LifeLoggerActivity.instance == null) LifeLoggerActivity.instance = this;
 		_logButtons.removeAllViews();
-		_idNameMapping = new HashMap<Integer, String>(); // TODO find out why I'm using a HashMap, apparently there's a better way.
+		HashMap<Integer, String> idNameMapping = new HashMap<Integer, String>(); // TODO Get rid of this hashmap
 
 		Calendar cal = Calendar.getInstance();
 		
 		// Load the buttons
-		Cursor cursor = _dbHelper.fetchEventTypes();
-		if (cursor.moveToFirst()) {
-			do {
-				int eventTypeID = cursor.getInt(cursor.getColumnIndex(DatabaseAdapter.KEY_ID));
-				String eventTypeName = cursor.getString(cursor.getColumnIndex(DatabaseAdapter.KEY_TYPE_NAME));
-				int active = cursor.getInt(cursor.getColumnIndex(DatabaseAdapter.KEY_ACTIVE));
-				_idNameMapping.put(Integer.valueOf(eventTypeID), eventTypeName);
-				
-				if (active == 1) {
-					_logButtons.addView(new EventButtonView(this, eventTypeID, eventTypeName));
-				}
-			} while(cursor.moveToNext());
+		EventTypeIterator eventTypeIterator = _dbHelper.fetchEventTypes();
+		for (EventType eventType : eventTypeIterator) {
+			idNameMapping.put(Integer.valueOf(eventType.getID()), eventType.getName());
+			
+			if (eventType.isActive()) {
+				_logButtons.addView(new LogEventLineView(this, eventType));
+			}
 		}
-		cursor.close();
 		
 		// Load recent logs
-		cursor = _dbHelper.fetchRecentEvents();
 		StringBuilder eventString = new StringBuilder();
-		
-		if (cursor.moveToFirst()) {
-			do {
-				long timeStamp = cursor.getInt(cursor.getColumnIndex(DatabaseAdapter.KEY_EVENT_TIME));
-				int eventType = cursor.getInt(cursor.getColumnIndex(DatabaseAdapter.KEY_EVENT_TYPE));
-								
-				cal.setTimeInMillis(timeStamp*1000);
-				String typeName = _idNameMapping.get(eventType);
-				eventString.append(Utils.getDateString(cal)+ " " + Utils.getTimeString(cal) + ": " + typeName + "\n");
-			} while (cursor.moveToNext());
+
+		EventIterator eventIterator = _dbHelper.fetchRecentEvents();
+		for (Event event : eventIterator) {
+			cal.setTimeInMillis(event.getTimeStamp()*1000);
+			String typeName = idNameMapping.get(event.getEventTypeID());
+			
+			eventString.append(
+					Utils.getDateString(cal) + " " + Utils.getTimeString(cal) + ": "
+					+ typeName + "\n"
+				);
 		}
-		cursor.close();
 		this.text_recent.setText(eventString.toString());
 	}
 	

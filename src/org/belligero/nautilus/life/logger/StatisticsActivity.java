@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import org.belligero.nautilus.life.logger.ojects.*;
 import org.belligero.nautilus.life.logger.utils.DatabaseAdapter;
 
 import android.app.Activity;
@@ -49,12 +50,17 @@ public class StatisticsActivity extends Activity {
 	/*************************************** Helper Functions ******************************************/
 	private void setupSpinner() {
 		List<CharSequence> arr = new ArrayList<CharSequence>();
-		Cursor cursor = _dbHelper.fetchEventTypes();
-		do {
-			arr.add(cursor.getString(cursor.getColumnIndex(DatabaseAdapter.KEY_TYPE_NAME)));
-		} while (cursor.moveToNext());
+		
+		EventTypeIterator iterator = _dbHelper.fetchEventTypes();
+		for (EventType eventType : iterator) {
+			arr.add(eventType.getName());
+		}
 
-		ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, arr);
+		ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
+				this,
+				android.R.layout.simple_spinner_item,
+				arr
+			);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner_events.setAdapter(adapter);
 		spinner_events.setOnItemSelectedListener(new OnEventSelectedListener());
@@ -130,7 +136,7 @@ public class StatisticsActivity extends Activity {
 		}
 		
 		public void run() {
-			Cursor cursor = _dbHelper.fetchAllEvents(_eventTypeName);
+			EventIterator iterator = _dbHelper.fetchAllEvents(_eventTypeName);
 			
 			Calendar startDate = null, endDate = null, tempDate;
 			Calendar currDate = Calendar.getInstance();
@@ -140,25 +146,22 @@ public class StatisticsActivity extends Activity {
 				totalEvents = 0;
 
 			// Loop through events to find the number of "Active" days
-			if (cursor.moveToFirst()) {
-				do {
-					totalEvents++;
-					time = (long)cursor.getInt(cursor.getColumnIndex(DatabaseAdapter.KEY_EVENT_TIME));
-					time = time * 1000L;
-					tempDate = Calendar.getInstance();
-					tempDate.setTimeInMillis(time);
-					
-					// First time in loop, set up everything
-					if (startDate == null) {				
-						startDate = tempDate;
-						endDate = tempDate;
-						activeDays = 1;
-					} else if (tempDate.get(Calendar.DAY_OF_YEAR) != endDate.get(Calendar.DAY_OF_YEAR)
-								|| tempDate.get(Calendar.YEAR) != endDate.get(Calendar.YEAR)) {
-						endDate = tempDate;
-						activeDays++;
-					}
-				} while (cursor.moveToNext());
+			for (Event event : iterator) {
+				totalEvents++;
+				time = event.getTimeStamp() * 1000L;
+				tempDate = Calendar.getInstance();
+				tempDate.setTimeInMillis(time);
+				
+				// First time in loop, set up everything
+				if (startDate == null) {				
+					startDate = tempDate;
+					endDate = tempDate;
+					activeDays = 1;
+				} else if (tempDate.get(Calendar.DAY_OF_YEAR) != endDate.get(Calendar.DAY_OF_YEAR)
+							|| tempDate.get(Calendar.YEAR) != endDate.get(Calendar.YEAR)) {
+					endDate = tempDate;
+					activeDays++;
+				}
 			}
 
 			// Calculate the total numbers of days, since the first entry

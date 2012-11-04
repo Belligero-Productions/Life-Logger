@@ -1,5 +1,7 @@
 package org.belligero.nautilus.life.logger.utils;
 
+import org.belligero.nautilus.life.logger.ojects.*;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -57,7 +59,9 @@ public class DatabaseAdapter {
 		}
 
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			
+			if (oldVersion < 2) {
+				// Do stuff for going from 1 to 2
+			}
 		}
 	}
 	
@@ -79,75 +83,121 @@ public class DatabaseAdapter {
 		ContentValues values = new ContentValues();
 		values.put(KEY_TYPE_NAME, name);
 		values.put(KEY_ACTIVE, (active ? "1" : "0"));
-		return _dbConnection.update(TABLE_EVENT_TYPE, values, KEY_ID+"="+id, null);
+		return _dbConnection.update(
+				TABLE_EVENT_TYPE,
+				values,
+				KEY_ID + "=" + id,
+				null
+			);
 	}
 	
 	public long insertEvent(int eventType, int time) {
 		ContentValues values = new ContentValues();
 		values.put(KEY_EVENT_TIME, time);
 		values.put(KEY_EVENT_TYPE, eventType);
-		return _dbConnection.insert(TABLE_EVENT, null, values);
+		return _dbConnection.insert(
+				TABLE_EVENT,
+				null,
+				values
+			);
 	}
 	
-	public Cursor fetchEventTypes() {
+	public EventTypeIterator fetchEventTypes() {
 		String[] columns = new String[]{KEY_ID, KEY_TYPE_NAME, KEY_ACTIVE}; 
-		Cursor cursor = 
-			_dbConnection.query(TABLE_EVENT_TYPE, columns, null, null, null, null, KEY_ID);
-		if (cursor != null) {
-			cursor.moveToFirst();
-		}
-		return cursor;
+		return new EventTypeIterator( 
+				_dbConnection.query(
+						TABLE_EVENT_TYPE,
+						columns,
+						null,
+						null,
+						null,
+						null,
+						KEY_ID
+					)
+			);
 	}
 	
-	public Cursor fetchRecentEvents() {
+	public EventIterator fetchRecentEvents() {
 		String[] columns = new String[]{KEY_EVENT_TIME, KEY_EVENT_TYPE};
-		Cursor cursor =
-			_dbConnection.query(TABLE_EVENT, columns, null, null, null, null, KEY_EVENT_TIME+" DESC", ""+RECENT_EVENT_COUNT);
-		if (cursor != null) {
-			cursor.moveToFirst();
-		}
-		return cursor;
+		return new EventIterator(
+				_dbConnection.query(
+						TABLE_EVENT,
+						columns,
+						null,
+						null,
+						null,
+						null,
+						KEY_EVENT_TIME + " DESC",
+						"" + RECENT_EVENT_COUNT
+					)
+			);
 	}
 	
-	public Cursor fetchRecentEvents(int eventType) {
+	public EventIterator fetchRecentEvents(int eventType) {
 		String[] columns = new String[]{KEY_EVENT_TIME, KEY_EVENT_TYPE};
-		Cursor cursor =
-			_dbConnection.query(TABLE_EVENT, columns, KEY_EVENT_TYPE+"=?", new String[]{""+eventType}, null, null, KEY_EVENT_TIME+" DESC", ""+RECENT_EVENT_COUNT);
-		if (cursor != null) {
-			cursor.moveToFirst();
-		}
-		return cursor;
+		return new EventIterator(
+				_dbConnection.query(
+						TABLE_EVENT,
+						columns,
+						KEY_EVENT_TYPE+"=?",
+						new String[]{""+eventType},
+						null,
+						null,
+						KEY_EVENT_TIME + " DESC",
+						"" + RECENT_EVENT_COUNT
+					)
+			);
 	}
 	
-	public Cursor fetchAllEvents() {
+	public EventIterator fetchAllEvents() {
 		String[] columns = new String[]{KEY_EVENT_TIME, KEY_EVENT_TYPE};
-		Cursor cursor =
-			_dbConnection.query(TABLE_EVENT, columns, null, null, null, null, KEY_EVENT_TIME);
-		if (cursor != null) {
-			cursor.moveToFirst();
-		}
-		return cursor;
+		return new EventIterator(
+				_dbConnection.query(
+						TABLE_EVENT,
+						columns,
+						null,
+						null,
+						null,
+						null,
+						KEY_EVENT_TIME
+					)
+			);
 	}
 	
-	public Cursor fetchAllEvents(int eventType) {
+	public EventIterator fetchAllEvents(int eventType) {
 		String[] columns = new String[]{KEY_EVENT_TIME, KEY_EVENT_TYPE};
-		Cursor cursor =
-			_dbConnection.query(TABLE_EVENT, columns, KEY_EVENT_TYPE+"=?", new String[]{""+eventType}, null, null, KEY_EVENT_TIME);
-		if (cursor != null) {
-			cursor.moveToFirst();
-		}
-		return cursor;
+		return new EventIterator(
+				_dbConnection.query(
+						TABLE_EVENT,
+						columns,
+						KEY_EVENT_TYPE + "=?",
+						new String[]{""+eventType},
+						null,
+						null,
+						KEY_EVENT_TIME
+					)
+			);
 	}
 	
-	public Cursor fetchAllEvents(String eventTypeName) {
+	public EventIterator fetchAllEvents(String eventTypeName) {
 		String[] columns = new String[]{KEY_ID};
 		Cursor cursor =
-			_dbConnection.query(TABLE_EVENT_TYPE, columns, KEY_TYPE_NAME+"=?", new String[]{eventTypeName}, null, null, null);
+			_dbConnection.query(
+					TABLE_EVENT_TYPE,
+					columns,
+					KEY_TYPE_NAME + "=?",
+					new String[]{eventTypeName},
+					null,
+					null,
+					null
+				);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			int eventType = cursor.getInt(cursor.getColumnIndex(KEY_ID)); 
+			
+			int eventType = cursor.getInt(cursor.getColumnIndex(KEY_ID));
+			
 			return fetchAllEvents(eventType);
 		}
-		return null;
+		return new EventIterator(null);
 	}
 }

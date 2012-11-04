@@ -1,5 +1,7 @@
 package org.belligero.nautilus.life.logger;
 
+import org.belligero.nautilus.life.logger.ojects.EventType;
+import org.belligero.nautilus.life.logger.ojects.EventTypeIterator;
 import org.belligero.nautilus.life.logger.utils.DatabaseAdapter;
 import org.belligero.nautilus.life.logger.R;
 
@@ -22,6 +24,7 @@ public class EditEventsActivity extends Activity {
 		
 		_dbHelper = new DatabaseAdapter(this).open();
 		// TODO Find a better way of doing this, something with a list
+		// TODO Make this use the new dynamic view control
     	_editTexts = new EditText[]{
 	    		(EditText)findViewById(R.id.edit_eventName1),
 	    		(EditText)findViewById(R.id.edit_eventName2),
@@ -47,30 +50,28 @@ public class EditEventsActivity extends Activity {
 	}
     
     private void fillData() {    	
-    	Cursor cursor = _dbHelper.fetchEventTypes();
-    	cursor.moveToFirst();
+    	EventTypeIterator iterator = _dbHelper.fetchEventTypes();
+
+    	// TODO Make this use the new dynamic view control
     	for (int i = 0; i < 5; i++) {
-    		fillRowData(cursor, _checkBoxes[i], _editTexts[i]);
-    		cursor.moveToNext();
+    		fillRowData(iterator.next(), _checkBoxes[i], _editTexts[i]);
     	}
-    	cursor.close();
     }
     
-    private void fillRowData(Cursor cursor, CheckBox checkBox, EditText textField) {
-    	int active = cursor.getInt(cursor.getColumnIndex(DatabaseAdapter.KEY_ACTIVE));
-    	String name = cursor.getString(cursor.getColumnIndex(DatabaseAdapter.KEY_TYPE_NAME));
-    	
-    	checkBox.setChecked(active != 0);
-    	textField.setText(name);
+    private void fillRowData(EventType eventType, CheckBox checkBox, EditText textField) {
+    	checkBox.setChecked(eventType.isActive());
+    	textField.setText(eventType.getName());
     }
     
     private void saveData() {
+    	// TODO Make this use the new dynamic view control
     	for (int i=0; i < 5; i++) {
     		saveRowData(i+1, _checkBoxes[i], _editTexts[i]);
     	}
     }
     
     private void saveRowData(int id, CheckBox checkBox, EditText textField) {
+    	// TODO make this use the new EventType object
     	boolean active = checkBox.isChecked();
     	String name = textField.getText().toString();
     	

@@ -5,6 +5,10 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Calendar;
 
+import org.belligero.nautilus.life.logger.ojects.Event;
+import org.belligero.nautilus.life.logger.ojects.EventIterator;
+import org.belligero.nautilus.life.logger.ojects.EventType;
+import org.belligero.nautilus.life.logger.ojects.EventTypeIterator;
 import org.belligero.nautilus.life.logger.utils.DatabaseAdapter;
 import org.belligero.nautilus.life.logger.utils.Utils;
 import org.belligero.nautilus.life.logger.R;
@@ -37,6 +41,7 @@ public class ExportDataActivity extends Activity {
 		edit_fileName = (EditText)findViewById(R.id.edit_fileName);
 		_dbHelper = new DatabaseAdapter(this).open();
 		// TODO Find a better way of doing this, something with a list
+		// TODO Make this use the new dynamic view control
     	_checkBoxes = new CheckBox[]{
     			(CheckBox)findViewById(R.id.check_export1),
     			(CheckBox)findViewById(R.id.check_export2),
@@ -44,6 +49,7 @@ public class ExportDataActivity extends Activity {
     			(CheckBox)findViewById(R.id.check_export4),
     			(CheckBox)findViewById(R.id.check_export5),
     	};
+		// TODO Make this use the new dynamic view control
     	_eventNames = new TextView[]{
 	    		(TextView)findViewById(R.id.text_exportName1),
 	    		(TextView)findViewById(R.id.text_exportName2),
@@ -69,21 +75,18 @@ public class ExportDataActivity extends Activity {
 
 	/*************************************** Helper Functions ******************************************/
     private void fillData() {    	
-    	Cursor cursor = _dbHelper.fetchEventTypes();
-    	cursor.moveToFirst();
+    	EventTypeIterator iterator = _dbHelper.fetchEventTypes();
+
+		// TODO Make this use the new dynamic view control
     	for (int i = 0; i < 5; i++) {
-    		fillRowData(cursor, _checkBoxes[i], _eventNames[i]);
-    		cursor.moveToNext();
+    		fillRowData(iterator.next(), _checkBoxes[i], _eventNames[i]);
     	}
-    	cursor.close();
     }
     
-    private void fillRowData(Cursor cursor, CheckBox checkBox, TextView textField) {
-    	int active = cursor.getInt(cursor.getColumnIndex(DatabaseAdapter.KEY_ACTIVE));
-    	String name = cursor.getString(cursor.getColumnIndex(DatabaseAdapter.KEY_TYPE_NAME));
-    	
-    	checkBox.setChecked(active != 0);
-    	textField.setText(name);
+    private void fillRowData(EventType eventType, CheckBox checkBox, TextView textField) {
+		// TODO Make this use the new dynamic view control
+    	checkBox.setChecked(eventType.isActive());
+    	textField.setText(eventType.getName());
     }
 
 	/*************************************** Export Functions ******************************************/
@@ -115,23 +118,23 @@ public class ExportDataActivity extends Activity {
     
     private String getOutputString() {
     	StringBuilder ret = new StringBuilder();
-    	Cursor cursor;
     	String name;
     	Calendar cal = Calendar.getInstance();
     	
     	for (int i = 0; i < 5; i++) {
     		if (_checkBoxes[i].isChecked()) {
     			name = _eventNames[i].getText().toString();
-    			cursor = _dbHelper.fetchAllEvents(i+1);
-    			if (cursor.moveToFirst()) {
-    				do {
-    					long time = cursor.getInt(cursor.getColumnIndex(DatabaseAdapter.KEY_EVENT_TIME));
-    					cal.setTimeInMillis(time*1000);
-    					String line = "\"" + Utils.getDateString(cal) + ' ' + Utils.getTimeString(cal) + "\",\"" + name + "\"\n";
-    					ret.append(line);
-    				} while (cursor.moveToNext());
-    				ret.append('\n');
+    			
+    			EventIterator iterator = _dbHelper.fetchAllEvents(i+1);
+    			for (Event event : iterator) {
+					cal.setTimeInMillis(event.getTimeStamp()*1000);
+					ret.append(
+							'"' + Utils.getDateString(cal) + ' ' + Utils.getTimeString(cal)
+							+ "\",\"" + name
+							+ "\"\n"
+						);
     			} // if
+				ret.append('\n');
     		} // if
     	} // for
     	
