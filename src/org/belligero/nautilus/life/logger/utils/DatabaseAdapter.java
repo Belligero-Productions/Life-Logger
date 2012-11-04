@@ -10,12 +10,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseAdapter {
-	public static final String KEY_ID = "id",
-							KEY_TYPE_NAME = "type_name",
-							KEY_ACTIVE = "active",
-							KEY_EVENT_TIME = "event_time",
-							KEY_EVENT_TYPE = "event_type";
 	public static final int RECENT_EVENT_COUNT = 50;
+	public final EventHandler eventHandler;
+	public final EventTypeHandler eventTypeHandler;
 	
 	private SQLiteDatabase _dbConnection;
 	private DatabaseHelper _dbHelper;
@@ -46,6 +43,7 @@ public class DatabaseAdapter {
 					"(4, 'Exercised', 1)," +
 					"(5, 'Slept', 1)";
 			*/
+			
 			String sql = "INSERT INTO event_type(id, type_name, active) VALUES (1, 'Drank Coffee', 1)";
 			db.execSQL(sql);
 			sql = "INSERT INTO event_type(id, type_name, active) VALUES (2, 'Drank Tea', 1)";
@@ -67,11 +65,16 @@ public class DatabaseAdapter {
 	
 	public DatabaseAdapter(Context context) {
 		_context = context;
+		this.open();
+		
+		this.eventHandler = new EventHandler();
+		this.eventTypeHandler = new EventTypeHandler();
 	}
 	
 	public DatabaseAdapter open() throws SQLException {
 		_dbHelper = new DatabaseHelper(_context);
 		_dbConnection = _dbHelper.getWritableDatabase();
+		
 		return this;
 	}
 	
@@ -79,125 +82,173 @@ public class DatabaseAdapter {
 		_dbHelper.close();
 	}
 	
-	public long editEventType(int id, String name, boolean active) {
-		ContentValues values = new ContentValues();
-		values.put(KEY_TYPE_NAME, name);
-		values.put(KEY_ACTIVE, (active ? "1" : "0"));
-		return _dbConnection.update(
-				TABLE_EVENT_TYPE,
-				values,
-				KEY_ID + "=" + id,
-				null
-			);
-	}
+	public class EventTypeHandler {
+		/********************************** Insert, Update, Delete *****************************************/
+		public long updateEventType(EventType eventType) {
+			ContentValues values = new ContentValues();
+			values.put(
+					EventType.NAME,
+					eventType.getName()
+				);
+			values.put(
+					EventType.ACTIVE,
+					(eventType.isActive() ? "1" : "0")
+				);
+			
+			return _dbConnection.update(
+					TABLE_EVENT_TYPE,
+					values,
+					EventType.ID + "=" + eventType.getID(),
+					null
+				);
+		}
+		
+		/********************************** Select, Retrieve ***********************************************/
+		public EventTypeIterator fetchAllEventTypes() {
+			String[] columns = new String[]{
+					EventType.ID,
+					EventType.NAME,
+					EventType.ACTIVE
+				}; 
+			
+			return new EventTypeIterator( 
+					_dbConnection.query(
+							TABLE_EVENT_TYPE,
+							columns,
+							null,
+							null,
+							null,
+							null,
+							EventType.ID
+						)
+				);
+		}
+	} // EventTypeHandler
 	
-	public long insertEvent(int eventType, int time) {
-		ContentValues values = new ContentValues();
-		values.put(KEY_EVENT_TIME, time);
-		values.put(KEY_EVENT_TYPE, eventType);
-		return _dbConnection.insert(
-				TABLE_EVENT,
-				null,
-				values
-			);
-	}
-	
-	public EventTypeIterator fetchEventTypes() {
-		String[] columns = new String[]{KEY_ID, KEY_TYPE_NAME, KEY_ACTIVE}; 
-		return new EventTypeIterator( 
+	public class EventHandler {
+		/********************************** Insert, Update, Delete *****************************************/
+		public long insertEvent(Event event) {
+			ContentValues values = new ContentValues();
+			values.put(
+					Event.TIME,
+					event.getTimeStamp()
+				);
+			values.put(
+					Event.EVENT_TYPE,
+					event.getEventTypeID()
+				);
+			
+			return _dbConnection.insert(
+					TABLE_EVENT,
+					null,
+					values
+				);
+		}
+		
+		/********************************** Select, Retrieve ***********************************************/
+		public EventIterator fetchAllEvents() {
+			String[] columns = new String[]{
+					Event.TIME,
+					Event.EVENT_TYPE
+				};
+			
+			return new EventIterator(
+					_dbConnection.query(
+							TABLE_EVENT,
+							columns,
+							null,
+							null,
+							null,
+							null,
+							Event.TIME
+						)
+				);
+		}
+		
+		public EventIterator fetchAllEventsOfType(int eventTypeID) {
+			String[] columns = new String[]{
+					Event.TIME,
+					Event.EVENT_TYPE
+				};
+			
+			return new EventIterator(
+					_dbConnection.query(
+							TABLE_EVENT,
+							columns,
+							Event.EVENT_TYPE + "=?",
+							new String[]{
+									Integer.toString( eventTypeID )
+								},
+							null,
+							null,
+							Event.TIME
+						)
+				);
+		}
+		
+		public EventIterator fetchAllEventsOfType(String eventTypeName) {
+			String[] columns = new String[]{
+					EventType.ID
+				};
+			
+			Cursor cursor =
 				_dbConnection.query(
 						TABLE_EVENT_TYPE,
 						columns,
+						EventType.NAME + "=?",
+						new String[]{
+								eventTypeName
+							},
 						null,
 						null,
-						null,
-						null,
-						KEY_ID
-					)
-			);
-	}
-	
-	public EventIterator fetchRecentEvents() {
-		String[] columns = new String[]{KEY_EVENT_TIME, KEY_EVENT_TYPE};
-		return new EventIterator(
-				_dbConnection.query(
-						TABLE_EVENT,
-						columns,
-						null,
-						null,
-						null,
-						null,
-						KEY_EVENT_TIME + " DESC",
-						"" + RECENT_EVENT_COUNT
-					)
-			);
-	}
-	
-	public EventIterator fetchRecentEvents(int eventType) {
-		String[] columns = new String[]{KEY_EVENT_TIME, KEY_EVENT_TYPE};
-		return new EventIterator(
-				_dbConnection.query(
-						TABLE_EVENT,
-						columns,
-						KEY_EVENT_TYPE+"=?",
-						new String[]{""+eventType},
-						null,
-						null,
-						KEY_EVENT_TIME + " DESC",
-						"" + RECENT_EVENT_COUNT
-					)
-			);
-	}
-	
-	public EventIterator fetchAllEvents() {
-		String[] columns = new String[]{KEY_EVENT_TIME, KEY_EVENT_TYPE};
-		return new EventIterator(
-				_dbConnection.query(
-						TABLE_EVENT,
-						columns,
-						null,
-						null,
-						null,
-						null,
-						KEY_EVENT_TIME
-					)
-			);
-	}
-	
-	public EventIterator fetchAllEvents(int eventType) {
-		String[] columns = new String[]{KEY_EVENT_TIME, KEY_EVENT_TYPE};
-		return new EventIterator(
-				_dbConnection.query(
-						TABLE_EVENT,
-						columns,
-						KEY_EVENT_TYPE + "=?",
-						new String[]{""+eventType},
-						null,
-						null,
-						KEY_EVENT_TIME
-					)
-			);
-	}
-	
-	public EventIterator fetchAllEvents(String eventTypeName) {
-		String[] columns = new String[]{KEY_ID};
-		Cursor cursor =
-			_dbConnection.query(
-					TABLE_EVENT_TYPE,
-					columns,
-					KEY_TYPE_NAME + "=?",
-					new String[]{eventTypeName},
-					null,
-					null,
-					null
-				);
-		if (cursor != null) {
-			cursor.moveToFirst();
+						null
+					);
 			
-			int eventType = cursor.getInt(cursor.getColumnIndex(KEY_ID));
-			
-			return fetchAllEvents(eventType);
+			if (cursor != null) {
+				cursor.moveToFirst();
+				
+				int eventTypeID = cursor.getInt(cursor.getColumnIndex(EventType.ID));
+				
+				return fetchAllEventsOfType(eventTypeID);
+			} else return new EventIterator(null);
 		}
-		return new EventIterator(null);
-	}
-}
+		
+		public EventIterator fetchRecentEvents() {
+			String[] columns = new String[]{Event.TIME, Event.EVENT_TYPE};
+			return new EventIterator(
+					_dbConnection.query(
+							TABLE_EVENT,
+							columns,
+							null,
+							null,
+							null,
+							null,
+							Event.TIME + " DESC",
+							Integer.toString( RECENT_EVENT_COUNT )
+						)
+				);
+		}
+		
+		public EventIterator fetchRecentEvents(int eventTypeID) {
+			String[] columns = new String[]{
+					Event.TIME,
+					Event.EVENT_TYPE
+				};
+			
+			return new EventIterator(
+					_dbConnection.query(
+							TABLE_EVENT,
+							columns,
+							Event.EVENT_TYPE + "=?",
+							new String[]{
+									Integer.toString( eventTypeID )
+								},
+							null,
+							null,
+							Event.TIME + " DESC",
+							Integer.toString( RECENT_EVENT_COUNT )
+						)
+				);
+		}
+	} // EventHandler
+} // DatabaseAdapter

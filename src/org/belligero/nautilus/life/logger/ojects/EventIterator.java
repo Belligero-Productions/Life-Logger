@@ -16,10 +16,10 @@ public class EventIterator extends ObjectIterator<Event> {
 	public Event next() {
 		if (!this.hasNext()) return null;
 		
-		_cursor.moveToNext();
+		this.moveToNext();
 		return new Event(
-				_cursor.getInt(_cursor.getColumnIndex(DatabaseAdapter.KEY_EVENT_TYPE)),
-				_cursor.getLong(_cursor.getColumnIndex(DatabaseAdapter.KEY_EVENT_TIME))
+				this.getInt( Event.EVENT_TYPE ),
+				this.getLong( Event.TIME )
 			);
 	}
 }

@@ -15,12 +15,11 @@ public class EventTypeIterator extends ObjectIterator<EventType> {
 	public EventType next() {
 		if (!this.hasNext()) return null;
 		
-		_cursor.moveToNext();
-		
+		this.moveToNext();
 		return new EventType(
-				_cursor.getInt(_cursor.getColumnIndex(DatabaseAdapter.KEY_ID)),
-				_cursor.getInt(_cursor.getColumnIndex(DatabaseAdapter.KEY_ACTIVE)),
-				_cursor.getString(_cursor.getColumnIndex(DatabaseAdapter.KEY_TYPE_NAME))
+				this.getInt( EventType.ID ),
+				this.getInt( EventType.ACTIVE ),
+				this.getString( EventType.NAME )
 			);
 	}
 }

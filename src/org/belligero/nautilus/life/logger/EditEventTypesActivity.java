@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-public class EditEventsActivity extends Activity {
+public class EditEventTypesActivity extends Activity {
 	private DatabaseAdapter _dbHelper;
 	private static final String TAG = "LifeLogger::EditEvents";
 	private CheckBox[] _checkBoxes;
@@ -50,17 +50,22 @@ public class EditEventsActivity extends Activity {
 	}
     
     private void fillData() {    	
-    	EventTypeIterator iterator = _dbHelper.fetchEventTypes();
-
+    	EventTypeIterator iterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
+    	
     	// TODO Make this use the new dynamic view control
     	for (int i = 0; i < 5; i++) {
-    		fillRowData(iterator.next(), _checkBoxes[i], _editTexts[i]);
+    		EventType eventType = iterator.next();
+    		fillRowData(
+    				eventType,
+    				_checkBoxes[i],
+    				_editTexts[i]
+				);
     	}
     }
     
     private void fillRowData(EventType eventType, CheckBox checkBox, EditText textField) {
-    	checkBox.setChecked(eventType.isActive());
-    	textField.setText(eventType.getName());
+    	checkBox.setChecked( eventType.isActive() );
+    	textField.setText( eventType.getName() );
     }
     
     private void saveData() {
@@ -71,10 +76,12 @@ public class EditEventsActivity extends Activity {
     }
     
     private void saveRowData(int id, CheckBox checkBox, EditText textField) {
-    	// TODO make this use the new EventType object
-    	boolean active = checkBox.isChecked();
-    	String name = textField.getText().toString();
+    	EventType eventType = new EventType(
+    			id,
+    			checkBox.isChecked(),
+    			textField.getText().toString()
+			);
     	
-    	_dbHelper.editEventType(id, name, active);
+    	_dbHelper.eventTypeHandler.updateEventType( eventType );
     }
 }

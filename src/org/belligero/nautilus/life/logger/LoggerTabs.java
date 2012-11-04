@@ -62,7 +62,7 @@ public class LoggerTabs extends TabActivity {
 		
 		switch (item.getItemId()) {
 		case R.id.menu_editEvents:
-			intent = new Intent(this, EditEventsActivity.class);
+			intent = new Intent(this, EditEventTypesActivity.class);
 			startActivityForResult(intent, ACTIVITY_ID_EDIT_EVENTS);
 			return true;
 		case R.id.menu_exportData:

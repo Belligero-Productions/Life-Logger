@@ -19,6 +19,9 @@
     <string name="btn_logEvent">Log</string>
     <string name="btn_viewRecent">View Recent</string>
     
+    <!-- Toggle switches -->
+    <string name="toggle_active">Active</string>
+    <string name="toggle_inactive">Inactive</string>
     
     <!-- Tabs -->
     <string name="tab_log">Log</string>

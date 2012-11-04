@@ -34,7 +34,9 @@ public class LifeLoggerActivity extends Activity {
 	
 	private int _year, _month, _day,
 				_hour, _minute;
+	
 	private DatabaseAdapter _dbHelper;
+	
 	private LinearLayout _logButtons;
 	
 	private static LifeLoggerActivity instance;
@@ -46,6 +48,7 @@ public class LifeLoggerActivity extends Activity {
 		setContentView(R.layout.log_events);
 		
 		_dbHelper = new DatabaseAdapter(this).open();
+		
 		text_recent = (TextView)findViewById(R.id.text_recent);
 		
 		// Setup the logging buttons
@@ -72,15 +75,21 @@ public class LifeLoggerActivity extends Activity {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(_year, _month, _day, _hour, _minute, 0);
-		long timeStamp = cal.getTimeInMillis()/1000;
-		_dbHelper.insertEvent(eventType.getID(), (int)timeStamp);
+		
+		Event event = new Event(
+				eventType,
+				cal.getTimeInMillis() / 1000
+			);
+		
+		_dbHelper.eventHandler.insertEvent( event );
 	}
 	
 	public void showRecent(EventType eventType) {
 		Calendar cal = Calendar.getInstance();
 		StringBuilder eventString = new StringBuilder();
 		
-		EventIterator iterator = _dbHelper.fetchRecentEvents(eventType.getID());
+		EventIterator iterator = _dbHelper.eventHandler.fetchRecentEvents( eventType.getID() );
+
 		// TODO move this into a function so no duplication
 		for (Event event : iterator) {
 			cal.setTimeInMillis(event.getTimeStamp() * 1000);
@@ -90,7 +99,8 @@ public class LifeLoggerActivity extends Activity {
 					+ eventType.getName() + "\n"
 				);
 		}
-		this.text_recent.setText(eventString);
+		
+		this.text_recent.setText( eventString );
 	}
 	
 	public static void refresh() {
@@ -100,13 +110,14 @@ public class LifeLoggerActivity extends Activity {
 	/*************************************** Helper Functions ******************************************/
 	private void loadData() {
 		if (LifeLoggerActivity.instance == null) LifeLoggerActivity.instance = this;
+		
 		_logButtons.removeAllViews();
 		HashMap<Integer, String> idNameMapping = new HashMap<Integer, String>(); // TODO Get rid of this hashmap
 
 		Calendar cal = Calendar.getInstance();
 		
 		// Load the buttons
-		EventTypeIterator eventTypeIterator = _dbHelper.fetchEventTypes();
+		EventTypeIterator eventTypeIterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
 		for (EventType eventType : eventTypeIterator) {
 			idNameMapping.put(Integer.valueOf(eventType.getID()), eventType.getName());
 			
@@ -118,7 +129,7 @@ public class LifeLoggerActivity extends Activity {
 		// Load recent logs
 		StringBuilder eventString = new StringBuilder();
 
-		EventIterator eventIterator = _dbHelper.fetchRecentEvents();
+		EventIterator eventIterator = _dbHelper.eventHandler.fetchRecentEvents();
 		for (Event event : eventIterator) {
 			cal.setTimeInMillis(event.getTimeStamp()*1000);
 			String typeName = idNameMapping.get(event.getEventTypeID());
@@ -128,6 +139,7 @@ public class LifeLoggerActivity extends Activity {
 					+ typeName + "\n"
 				);
 		}
+		
 		this.text_recent.setText(eventString.toString());
 	}
 	

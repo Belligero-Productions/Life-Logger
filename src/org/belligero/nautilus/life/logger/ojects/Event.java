@@ -1,6 +1,10 @@
 package org.belligero.nautilus.life.logger.ojects;
 
 public class Event {
+	public static final String
+		TIME = "event_time",
+		EVENT_TYPE = "event_type";
+	
 	protected int _eventTypeID;
 	protected long _timeStamp;
 	

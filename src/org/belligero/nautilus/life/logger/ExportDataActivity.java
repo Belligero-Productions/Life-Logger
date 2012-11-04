@@ -75,7 +75,7 @@ public class ExportDataActivity extends Activity {
 
 	/*************************************** Helper Functions ******************************************/
     private void fillData() {    	
-    	EventTypeIterator iterator = _dbHelper.fetchEventTypes();
+    	EventTypeIterator iterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
 
 		// TODO Make this use the new dynamic view control
     	for (int i = 0; i < 5; i++) {
@@ -125,7 +125,7 @@ public class ExportDataActivity extends Activity {
     		if (_checkBoxes[i].isChecked()) {
     			name = _eventNames[i].getText().toString();
     			
-    			EventIterator iterator = _dbHelper.fetchAllEvents(i+1);
+    			EventIterator iterator = _dbHelper.eventHandler.fetchAllEventsOfType( i+1 );
     			for (Event event : iterator) {
 					cal.setTimeInMillis(event.getTimeStamp()*1000);
 					ret.append(

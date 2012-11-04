@@ -1,6 +1,11 @@
 package org.belligero.nautilus.life.logger.ojects;
 
 public class EventType {
+	public static final String
+		ID = "id",
+		NAME = "type_name",
+		ACTIVE = "active";
+	
 	protected int _id;
 	protected boolean _isActive;
 	protected String _name;

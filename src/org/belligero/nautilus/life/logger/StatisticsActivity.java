@@ -25,13 +25,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class StatisticsActivity extends Activity {
-	private static final String TAG = "Statistics";
-	private static final int DIALOG_PROGRESS = 1;
+	private static final String
+		TAG = "Statistics";
+	private static final int
+		DIALOG_PROGRESS = 1;
+	
 	private Spinner spinner_events;
-	private DatabaseAdapter _dbHelper;
 	private LinearLayout statsView;
 	private ProgressDialog _progressDialog;
+	
 	private String _eventTypeName;
+	
+	private DatabaseAdapter _dbHelper;
+	private DatabaseAdapter.EventHandler _eventHandler;
+	private DatabaseAdapter.EventTypeHandler _eventTypeHandler;
 
 	/********************************** Life cycle Functions *******************************************/
 	@Override
@@ -46,12 +53,14 @@ public class StatisticsActivity extends Activity {
 		_dbHelper.open();
 		setupSpinner();
 	}
+	
 	/*************************************** Public Functions ******************************************/
+	
 	/*************************************** Helper Functions ******************************************/
 	private void setupSpinner() {
 		List<CharSequence> arr = new ArrayList<CharSequence>();
 		
-		EventTypeIterator iterator = _dbHelper.fetchEventTypes();
+		EventTypeIterator iterator = _eventTypeHandler.fetchAllEventTypes();
 		for (EventType eventType : iterator) {
 			arr.add(eventType.getName());
 		}
@@ -103,6 +112,7 @@ public class StatisticsActivity extends Activity {
 	}
 	
 	/*************************************** Statistics Calculator *************************************/
+	// TODO Make this static (see warning on StatsCalculator::_handler)
 	final Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			HashMap<String, Integer> values = (HashMap<String, Integer>)msg.obj;
@@ -136,7 +146,7 @@ public class StatisticsActivity extends Activity {
 		}
 		
 		public void run() {
-			EventIterator iterator = _dbHelper.fetchAllEvents(_eventTypeName);
+			EventIterator iterator = _eventHandler.fetchAllEventsOfType( _eventTypeName );
 			
 			Calendar startDate = null, endDate = null, tempDate;
 			Calendar currDate = Calendar.getInstance();
