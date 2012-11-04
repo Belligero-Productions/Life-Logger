@@ -4,17 +4,29 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content">
 	
-	<Button android:id="@+id/btn_viewLog"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-		android:text="Recent"/>
-	
-	<Button android:id="@+id/btn_log"
+	<TextView android:id="@+id/text_eventName"
+	    android:tag="text_eventName"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignParentLeft="true"
-		android:layout_toLeftOf="@id/btn_viewLog"
-		android:text="Coffee"
+		android:text="Event Name"
 	/>
+	
+	<Button android:id="@+id/btn_viewRecent"
+	    android:tag="btn_viewRecent"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:text="@string/btn_viewRecent"
+	/>
+	
+	<Button android:id="@+id/btn_log"
+	    android:tag="btn_log"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toLeftOf="@id/btn_viewRecent"
+		android:text="@string/btn_logEvent"
+	/>
+	
+	
 </RelativeLayout>

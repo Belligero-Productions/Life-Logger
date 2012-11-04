@@ -14,6 +14,9 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Layout;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 
@@ -96,7 +99,7 @@ public class LifeLoggerActivity extends Activity {
 	private void loadData() {
 		if (LifeLoggerActivity.instance == null) LifeLoggerActivity.instance = this;
 		_logButtons.removeAllViews();
-		_idNameMapping = new HashMap<Integer, String>();
+		_idNameMapping = new HashMap<Integer, String>(); // TODO find out why I'm using a HashMap, apparently there's a better way.
 
 		Calendar cal = Calendar.getInstance();
 		
@@ -104,13 +107,13 @@ public class LifeLoggerActivity extends Activity {
 		Cursor cursor = _dbHelper.fetchEventTypes();
 		if (cursor.moveToFirst()) {
 			do {
-				int id = cursor.getInt(cursor.getColumnIndex(DatabaseAdapter.KEY_ID));
-				String name = cursor.getString(cursor.getColumnIndex(DatabaseAdapter.KEY_TYPE_NAME));
+				int eventTypeID = cursor.getInt(cursor.getColumnIndex(DatabaseAdapter.KEY_ID));
+				String eventTypeName = cursor.getString(cursor.getColumnIndex(DatabaseAdapter.KEY_TYPE_NAME));
 				int active = cursor.getInt(cursor.getColumnIndex(DatabaseAdapter.KEY_ACTIVE));
-				_idNameMapping.put(new Integer(id), name);
+				_idNameMapping.put(Integer.valueOf(eventTypeID), eventTypeName);
 				
 				if (active == 1) {
-					_logButtons.addView(new EventButtonView(this, id, name));
+					_logButtons.addView(new EventButtonView(this, eventTypeID, eventTypeName));
 				}
 			} while(cursor.moveToNext());
 		}
@@ -165,7 +168,21 @@ public class LifeLoggerActivity extends Activity {
 	}
 
 	/*************************************** Handlers **************************************************/
-
+	private View.OnClickListener btnClickListener = new View.OnClickListener() {
+		public void onClick(View v) {
+			switch (v.getId()) {
+			case R.id.btn_log:
+				Log.d("LifeLogger OnClick LogEvent", v.getTag(R.string.key_eventTypeID).toString());
+				Log.d("LifeLogger OnClick LogEvent", v.getTag(R.string.key_eventTypeName).toString());
+				break;
+			case R.id.btn_viewRecent:
+				Log.d("LifeLogger OnClick ViewRecent", v.getTag(R.string.key_eventTypeID).toString());
+				break;
+			default:
+				throw new RuntimeException("Unhandled OnClick Event: "+v.getId());
+			}
+		}
+	};
 	
 	/*************************************** Dialogs ***************************************************/
 	// Launch the various dialogs

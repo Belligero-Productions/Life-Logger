@@ -5,54 +5,50 @@ import org.belligero.nautilus.life.logger.R;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 
 public class EventButtonView extends RelativeLayout {
 	public static final int BTN_LOG = 1,
 							BTN_VIEW = 2;
-	private Button btn_log,
-				btn_view;
-	private int _id;
-	private String _text;
+	
+	private int _eventTypeID;
+	private String _eventName;
 	private LifeLoggerActivity _lifeLogger;
 	
-	public EventButtonView(Context context, int id, String text) {
+	public EventButtonView(Context context, int eventTypeID, String eventName) {
 		super(context);
+		addView(View.inflate(context, R.layout.view_log_buttons, null));
 		
-		_id = id;
-		_text = text;
+		_eventTypeID = eventTypeID;
+		_eventName = eventName;
 		_lifeLogger = (LifeLoggerActivity)context;
-
-		// View button
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		
-		btn_view = new Button(context);
-		btn_view.setId(BTN_VIEW);
-		btn_view.setText(R.string.view);
-		addView(btn_view, params);
+		// Get our controls
+		TextView text_eventName = (TextView)this.findViewById(R.id.text_eventName);
+		Button btn_log = (Button)this.findViewById(R.id.btn_log);
+		Button btn_viewRecent = (Button)this.findViewById(R.id.btn_viewRecent);
 		
-		// Log button
-		params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-		params.addRule(RelativeLayout.LEFT_OF, BTN_VIEW);
+		// Set the text
+		text_eventName.setText(_eventName);
 		
-		btn_log = new Button(context);
-		btn_log.setId(BTN_LOG);
-		btn_log.setText(text);
-		addView(btn_log, params);
-		
-		// Button Handlers
-		btn_log.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				_lifeLogger.logEvent(_id, _text);
-			}
-		});
-		
-		btn_view.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				_lifeLogger.showRecent(_id, _text);
-			}
-		});
+		// Add the event handlers
+		btn_log.setOnClickListener(btnOnClickListener);
+		btn_viewRecent.setOnClickListener(btnOnClickListener);
 	}
+	
+	private OnClickListener btnOnClickListener = new OnClickListener() {
+		public void onClick(View v) {
+			switch (v.getId()) {
+			case R.id.btn_log:
+				_lifeLogger.logEvent(_eventTypeID, _eventName);
+				break;
+			case R.id.btn_viewRecent:
+				_lifeLogger.showRecent(_eventTypeID, _eventName);
+				break;
+			default:
+				throw new RuntimeException("Unknown OnClick");
+			}
+		}
+	};
 }
