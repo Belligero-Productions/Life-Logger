@@ -11,6 +11,7 @@ import org.belligero.nautilus.life.logger.ojects.EventType;
 import org.belligero.nautilus.life.logger.ojects.EventTypeIterator;
 import org.belligero.nautilus.life.logger.utils.DatabaseAdapter;
 import org.belligero.nautilus.life.logger.utils.Utils;
+import org.belligero.nautilus.life.logger.views.ExportEventLineView;
 import org.belligero.nautilus.life.logger.R;
 
 import android.app.Activity;
@@ -21,49 +22,43 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class ExportDataActivity extends Activity {
+	private static final String
+		TAG = "LifeLogger::EditEvents";
+
 	private DatabaseAdapter _dbHelper;
-	private static final String TAG = "LifeLogger::EditEvents";
+	
 	private CheckBox[] _checkBoxes;
 	private TextView[] _eventNames;
-	private Button btn_export;
-	private EditText edit_fileName;
+	private Button _btn_export;
+	private EditText _edit_fileName;
+	
+	private LinearLayout _exportEventLines;
 	
 	/********************************** Lifecycle Functions ********************************************/
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.export_data);
-		
-		btn_export = (Button)findViewById(R.id.btn_exportData);
-		edit_fileName = (EditText)findViewById(R.id.edit_fileName);
+
 		_dbHelper = new DatabaseAdapter(this).open();
 		
-		// TODO Make this use the new dynamic view control
-    	_checkBoxes = new CheckBox[]{
-    			(CheckBox)findViewById(R.id.check_export1),
-    			(CheckBox)findViewById(R.id.check_export2),
-    			(CheckBox)findViewById(R.id.check_export3),
-    			(CheckBox)findViewById(R.id.check_export4),
-    			(CheckBox)findViewById(R.id.check_export5),
-    	};
-		// TODO Make this use the new dynamic view control
-    	_eventNames = new TextView[]{
-	    		(TextView)findViewById(R.id.text_exportName1),
-	    		(TextView)findViewById(R.id.text_exportName2),
-	    		(TextView)findViewById(R.id.text_exportName3),
-	    		(TextView)findViewById(R.id.text_exportName4),
-	    		(TextView)findViewById(R.id.text_exportName5),
-    	};
+		_exportEventLines = (LinearLayout) findViewById( R.id.container_exportEvents );
+		_btn_export = (Button) findViewById( R.id.btn_exportData );
+		_edit_fileName = (EditText) findViewById( R.id.edit_fileName );
+		
     	
     	// Setup handlers
-    	btn_export.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				exportData();
-			}
-		});
+    	_btn_export.setOnClickListener(
+    			new View.OnClickListener() {
+					public void onClick(View v) {
+						exportData();
+					}
+    			}
+			);
 		
 		fillData();
 	}
@@ -74,41 +69,50 @@ public class ExportDataActivity extends Activity {
 	}
 
 	/*************************************** Helper Functions ******************************************/
-    private void fillData() {    	
+    private void fillData() {
+    	_exportEventLines.removeAllViews();
+    	
     	EventTypeIterator iterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
-
-		// TODO Make this use the new dynamic view control
-    	for (int i = 0; i < 5; i++) {
-    		fillRowData(iterator.next(), _checkBoxes[i], _eventNames[i]);
+    	for (EventType eventType : iterator) {
+    		_exportEventLines.addView(
+    				new ExportEventLineView( this, eventType )
+				);
     	}
-    }
-    
-    private void fillRowData(EventType eventType, CheckBox checkBox, TextView textField) {
-		// TODO Make this use the new dynamic view control
-    	checkBox.setChecked(eventType.isActive());
-    	textField.setText(eventType.getName());
     }
 
 	/*************************************** Export Functions ******************************************/
     private boolean exportData() {
     	boolean ret = false;
-    	FileOutputStream fileOutStream;
     	PrintStream printStream;
-    	String fileName = edit_fileName.getText().toString();
+    	String fileName = _edit_fileName.getText().toString();
     	
     	try {
     		File root = Environment.getExternalStorageDirectory();
     		if (root.canWrite()) {
-    			printStream = new PrintStream(root + "/" + fileName);
+    			printStream = new PrintStream( root + "/" + fileName );
     			String output = getOutputString();
-    			printStream.print(output);
-    			Toast.makeText(this, R.string.export_complete, Toast.LENGTH_SHORT).show();
+    			printStream.print( output );
+    			
+    			Toast.makeText(
+    					this,
+    					R.string.export_complete,
+    					Toast.LENGTH_SHORT
+					).show();
+    			
     			ret = true;
     		} else {
-    			Toast.makeText(this, R.string.no_storage, Toast.LENGTH_SHORT).show();
+    			Toast.makeText(
+    					this,
+    					R.string.no_storage,
+    					Toast.LENGTH_SHORT
+					).show();
     		}
     	} catch (Exception e) {
-			Toast.makeText(this, R.string.export_error, Toast.LENGTH_SHORT).show();
+			Toast.makeText(
+					this,
+					R.string.export_error,
+					Toast.LENGTH_SHORT
+				).show();
     		e.printStackTrace();
     		ret = false;
     	}
@@ -118,19 +122,24 @@ public class ExportDataActivity extends Activity {
     
     private String getOutputString() {
     	StringBuilder ret = new StringBuilder();
-    	String name;
     	Calendar cal = Calendar.getInstance();
     	
-    	for (int i = 0; i < 5; i++) {
-    		if (_checkBoxes[i].isChecked()) {
-    			name = _eventNames[i].getText().toString();
+    	ExportEventLineView eventLine;
+    	EventType eventType;
+    	
+    	int count = _exportEventLines.getChildCount();
+    	for (int i = 0; i < count; i++) {
+    		eventLine = (ExportEventLineView) _exportEventLines.getChildAt( i );
+    		eventType = eventLine.getEventType();
+    		
+    		if ( eventLine.isSelected() ) {
     			
     			EventIterator iterator = _dbHelper.eventHandler.fetchAllEventsOfType( i+1 );
-    			for (Event event : iterator) {
-					cal.setTimeInMillis(event.getTimeStamp()*1000);
+    			for ( Event event : iterator ) {
+					cal.setTimeInMillis( event.getTimeStamp() * 1000 );
 					ret.append(
 							'"' + Utils.getDateString(cal) + ' ' + Utils.getTimeString(cal)
-							+ "\",\"" + name
+							+ "\",\"" + eventType.getName()
 							+ "\"\n"
 						);
     			} // if

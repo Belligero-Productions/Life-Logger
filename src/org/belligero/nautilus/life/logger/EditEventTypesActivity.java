@@ -39,14 +39,11 @@ public class EditEventTypesActivity extends Activity {
 					_btn_add;
 	private ImageButton _btn_delete;
 	
-	private Bundle _bundle;
-	
 	/********************************** Lifecycle Functions ********************************************/
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.edit_event_types);
 		
-		_bundle = savedInstanceState;
 		_dbHelper = new DatabaseAdapter(this).open();
 		_eventTypeLines = (LinearLayout) findViewById( R.id.container_editEventType );
 		
