@@ -1,7 +1,6 @@
 package org.belligero.nautilus.life.logger;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Calendar;
 
@@ -15,25 +14,21 @@ import org.belligero.nautilus.life.logger.views.ExportEventLineView;
 import org.belligero.nautilus.life.logger.R;
 
 import android.app.Activity;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class ExportDataActivity extends Activity {
+	@SuppressWarnings( "unused" )
 	private static final String
 		TAG = "LifeLogger::EditEvents";
 
 	private DatabaseAdapter _dbHelper;
 	
-	private CheckBox[] _checkBoxes;
-	private TextView[] _eventNames;
 	private Button _btn_export;
 	private EditText _edit_fileName;
 	

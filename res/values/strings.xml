@@ -6,7 +6,7 @@
     <string name="edit_events">Edit Events</string>
     <string name="header_active">Active</string>
     <string name="header_eventName">Event Name</string>
-    <string name="events_updated">Events updated. Reloading.</string>
+    <string name="events_updated">Events updated. Reloading&#8230;</string>
     <string name="export_data">Export records to CSV</string>
     <string name="stats">Statistics</string>
     
@@ -45,7 +45,7 @@
     <string name="stats_totalDailyAverage">Total Daily Average</string>
     <string name="stats_activeDailyAverage">Active Daily Average</string>
     <string name="stats_weeklyAverage">Weekly Average</string>
-    <string name="stats_calculating">Calculating, please wait...</string>
+    <string name="stats_calculating">Calculating, please wait&#8230;</string>
     
     <!-- Tag Keys -->
     <string name="key_eventTypeName">Event Type Name</string>

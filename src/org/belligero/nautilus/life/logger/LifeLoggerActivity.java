@@ -16,18 +16,18 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.text.Layout;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 
 public class LifeLoggerActivity extends Activity {
-	private static final String TAG = "LifeLogger";
-	private static final int DIALOG_ID_DATE = 1,
-							DIALOG_ID_TIME = 2;
+	@SuppressWarnings( "unused" )
+	private static final String
+		TAG = "LifeLogger";
+	private static final int
+		DIALOG_ID_DATE = 1,
+		DIALOG_ID_TIME = 2;
+	
 	private Button btn_date,
 				btn_time;
 	private TextView text_recent;
@@ -164,12 +164,14 @@ public class LifeLoggerActivity extends Activity {
 		updateDateTime();
 		
 		btn_date.setOnClickListener(new View.OnClickListener() {
+			@SuppressWarnings( "deprecation" )
 			public void onClick(View v) {
 				showDialog(DIALOG_ID_DATE);
 			}
 		});
 		
 		btn_time.setOnClickListener(new View.OnClickListener() {
+			@SuppressWarnings( "deprecation" )
 			public void onClick(View v) {
 				showDialog(DIALOG_ID_TIME);
 			}
@@ -182,21 +184,6 @@ public class LifeLoggerActivity extends Activity {
 	}
 
 	/*************************************** Handlers **************************************************/
-	private View.OnClickListener btnClickListener = new View.OnClickListener() {
-		public void onClick(View v) {
-			switch (v.getId()) {
-			case R.id.btn_log:
-				Log.d("LifeLogger OnClick LogEvent", v.getTag(R.string.key_eventTypeID).toString());
-				Log.d("LifeLogger OnClick LogEvent", v.getTag(R.string.key_eventTypeName).toString());
-				break;
-			case R.id.btn_viewRecent:
-				Log.d("LifeLogger OnClick ViewRecent", v.getTag(R.string.key_eventTypeID).toString());
-				break;
-			default:
-				throw new RuntimeException("Unhandled OnClick Event: "+v.getId());
-			}
-		}
-	};
 	
 	/*************************************** Dialogs ***************************************************/
 	// Launch the various dialogs

@@ -25,13 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class StatisticsActivity extends Activity {
+	@SuppressWarnings( "unused" )
 	private static final String
 		TAG = "Statistics";
 	private static final int
 		DIALOG_PROGRESS = 1;
 	
 	private Spinner spinner_events;
-	private LinearLayout statsView;
 	private ProgressDialog _progressDialog;
 	
 	private String _eventTypeName;
@@ -45,7 +45,6 @@ public class StatisticsActivity extends Activity {
 		setContentView(R.layout.stats);
 		
 		spinner_events = (Spinner)findViewById(R.id.spinner_selectEvent);
-		statsView = (LinearLayout)findViewById(R.id.container_statistics);
 		
 		_dbHelper = new DatabaseAdapter(this);
 		_dbHelper.open();
@@ -60,7 +59,7 @@ public class StatisticsActivity extends Activity {
 		
 		EventTypeIterator iterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
 		for (EventType eventType : iterator) {
-			arr.add(eventType.getName());
+			arr.add( eventType.getName() );
 		}
 
 		ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
@@ -68,20 +67,22 @@ public class StatisticsActivity extends Activity {
 				android.R.layout.simple_spinner_item,
 				arr
 			);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner_events.setAdapter(adapter);
-		spinner_events.setOnItemSelectedListener(new OnEventSelectedListener());
+		
+		adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
+		spinner_events.setAdapter( adapter );
+		spinner_events.setOnItemSelectedListener( new OnEventSelectedListener() );
 	}
 	
 	
 	/*************************************** Handlers **************************************************/
 	private class OnEventSelectedListener implements OnItemSelectedListener {
-		public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-			_eventTypeName = parent.getItemAtPosition(position).toString();
-			showDialog(DIALOG_PROGRESS);
+		@SuppressWarnings( "deprecation" )
+		public void onItemSelected( AdapterView<?> parent, View view, int position, long id ) {
+			_eventTypeName = parent.getItemAtPosition( position ).toString();
+			showDialog( DIALOG_PROGRESS );
 		}
 
-		public void onNothingSelected(AdapterView<?> arg0) {
+		public void onNothingSelected( AdapterView<?> arg0 ) {
 			// Do nothing
 		}
 	}
@@ -90,9 +91,12 @@ public class StatisticsActivity extends Activity {
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DIALOG_PROGRESS:
-			_progressDialog = new ProgressDialog(this);
-			_progressDialog.setMessage(this.getText(R.string.stats_calculating));
-			_progressDialog.setCancelable(false);
+			_progressDialog = new ProgressDialog( this );
+			_progressDialog.setMessage(
+					this.getText( R.string.stats_calculating )
+				);
+			_progressDialog.setCancelable( false );
+			
 			return _progressDialog;
 		default:
 			return null;
@@ -103,7 +107,7 @@ public class StatisticsActivity extends Activity {
 		switch (id) {
 		case DIALOG_PROGRESS:
 			if (_eventTypeName != null) { // Fix for this event being called before the list is populated
-				StatsCalculator calc = new StatsCalculator(handler, _eventTypeName);
+				StatsCalculator calc = new StatsCalculator( handler, _eventTypeName );
 				calc.start();
 			}
 		}
@@ -112,25 +116,32 @@ public class StatisticsActivity extends Activity {
 	/*************************************** Statistics Calculator *************************************/
 	// TODO Make this static (see warning on StatsCalculator::_handler)
 	final Handler handler = new Handler() {
+		@SuppressWarnings( "deprecation" )
 		public void handleMessage(Message msg) {
 			HashMap<String, Integer> values = (HashMap<String, Integer>)msg.obj;
 			
 			
 			int value = values.get("total").intValue();
-			TextView view = (TextView)findViewById(R.id.stats_total);
-			view.setText(""+value);
+			TextView view = (TextView) findViewById( R.id.stats_total );
+			view.setText(
+					Float.toString( value )
+				);
 
 			value = values.get("totalDailyAverage").intValue();
 			float display = value/10f;
-			view = (TextView)findViewById(R.id.stats_totalDailyAverage);
-			view.setText(""+display);
+			view = (TextView) findViewById( R.id.stats_totalDailyAverage );
+			view.setText(
+					Float.toString( display )
+				);
 
 			value = values.get("activeDailyAverage").intValue();
-			display = value/10f;
-			view = (TextView)findViewById(R.id.stats_activeDailyAverage);
-			view.setText(""+display);
+			display = value / 10f;
+			view = (TextView) findViewById( R.id.stats_activeDailyAverage );
+			view.setText(
+					Float.toString( display )
+				);
 			
-			StatisticsActivity.this.dismissDialog(DIALOG_PROGRESS);
+			StatisticsActivity.this.dismissDialog( DIALOG_PROGRESS );
 		}
 	};
 	
@@ -165,8 +176,10 @@ public class StatisticsActivity extends Activity {
 					startDate = tempDate;
 					endDate = tempDate;
 					activeDays = 1;
-				} else if (tempDate.get(Calendar.DAY_OF_YEAR) != endDate.get(Calendar.DAY_OF_YEAR)
-							|| tempDate.get(Calendar.YEAR) != endDate.get(Calendar.YEAR)) {
+				} else if (
+							tempDate.get(Calendar.DAY_OF_YEAR) != endDate.get(Calendar.DAY_OF_YEAR)
+							|| tempDate.get(Calendar.YEAR) != endDate.get(Calendar.YEAR)
+						) {
 					endDate = tempDate;
 					activeDays++;
 				}
@@ -188,7 +201,7 @@ public class StatisticsActivity extends Activity {
 			
 			Message msg = new Message();
 			msg.obj = values;
-			_handler.sendMessage(msg);
+			_handler.sendMessage( msg );
 		}
 	}
 }

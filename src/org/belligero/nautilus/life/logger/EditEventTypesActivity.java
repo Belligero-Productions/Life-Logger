@@ -9,25 +9,23 @@ import org.belligero.nautilus.life.logger.views.EditEventTypeLineView;
 import org.belligero.nautilus.life.logger.R;
 
 import android.app.Activity;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-public class EditEventTypesActivity extends Activity {	
-	private DatabaseAdapter _dbHelper;
+public class EditEventTypesActivity extends Activity {
+	@SuppressWarnings( "unused" )
 	private static final String
 		TAG = "LifeLogger::EditEvents";
 	private static final short
 		ASK_DELETE = 0,
 		CONFIRM_DELETE = 1,
 		NO_DELETE = 2;
-	
+
+	private DatabaseAdapter _dbHelper;
 	private LinearLayout _eventTypeLines;
 	
 	private int _numSelected;
@@ -113,7 +111,6 @@ public class EditEventTypesActivity extends Activity {
     private void saveData() {
     	int count = _eventTypeLines.getChildCount();
     	EditEventTypeLineView eventLine;
-    	EventType eventType;
     	
     	// Confirm that we want to delete things
     	if ( _deletingSome && _confirmDelete == ASK_DELETE ) {

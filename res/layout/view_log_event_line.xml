@@ -17,8 +17,6 @@
 		android:clickable="true"
 		android:longClickable="true"
 		
-		android:text="Event Name"
-		
 	    style="@android:style/Widget.DeviceDefault.Button.Borderless"
 	/>
 	

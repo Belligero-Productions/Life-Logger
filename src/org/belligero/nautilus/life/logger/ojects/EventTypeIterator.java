@@ -1,9 +1,5 @@
 package org.belligero.nautilus.life.logger.ojects;
 
-import java.util.Iterator;
-
-import org.belligero.nautilus.life.logger.utils.DatabaseAdapter;
-
 import android.database.Cursor;
 
 public class EventTypeIterator extends ObjectIterator<EventType> {
