@@ -18,6 +18,7 @@
     <!-- Button names -->
     <string name="btn_logEvent">Log</string>
     <string name="btn_viewRecent">View Recent</string>
+    
     <string name="btn_save">Save</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_delete">Delete</string>
@@ -30,6 +31,9 @@
     <string name="tab_log">Log</string>
     <string name="tab_export">Export</string>
     <string name="tab_stats">Statistics</string>
+    
+    <!-- Edit Event Types -->
+    <string name="confirm_delete">Are you sure you want to delete these events?\n\nThis cannot be undone.</string>
     
     <!-- Statistics -->
     <string name="stats_total">Total</string>

@@ -3,6 +3,7 @@ package org.belligero.nautilus.life.logger;
 import org.belligero.nautilus.life.logger.ojects.EventType;
 import org.belligero.nautilus.life.logger.ojects.EventTypeIterator;
 import org.belligero.nautilus.life.logger.utils.DatabaseAdapter;
+import org.belligero.nautilus.life.logger.utils.Utils;
 import org.belligero.nautilus.life.logger.views.EditEventTypeLineView;
 import org.belligero.nautilus.life.logger.R;
 
@@ -23,6 +24,7 @@ public class EditEventTypesActivity extends Activity {
 	private LinearLayout _eventTypeLines;
 	
 	private int _numSelected;
+	private boolean _deletingSome = false;
 	
 	private Button _btn_save,
 					_btn_delete,
@@ -39,6 +41,10 @@ public class EditEventTypesActivity extends Activity {
 		_btn_save = (Button) findViewById( R.id.btn_save );
 		_btn_delete = (Button) findViewById( R.id.btn_delete );
 		_btn_cancel = (Button) findViewById( R.id.btn_cancel );
+		
+		_btn_save.setOnClickListener( btnClick );
+		_btn_delete.setOnClickListener( btnClick );
+		_btn_cancel.setOnClickListener( btnClick );
 		
 		fillData();
 	}
@@ -89,11 +95,30 @@ public class EditEventTypesActivity extends Activity {
     	EventType eventType = eventLine.getEventType();
     	
     	// TODO Delete things
+    	// Confirm our delete
+    	boolean doDelete = Utils.confirm(
+    			this,
+    			"", // TODO Set a title (if needed)
+    			this.getString( R.string.confirm_delete )
+    		);
+    	
     	if ( eventType.getID() == 0 ) {
     		eventType = _dbHelper.eventTypeHandler.insertEventType( eventType );
     		eventLine.setEventType( eventType );
     	} else {
     		_dbHelper.eventTypeHandler.updateEventType( eventType );
+    	}
+    }
+    
+    private void flagDeletedRows() {
+    	int count = _eventTypeLines.getChildCount();
+    	EditEventTypeLineView eventLine;
+    	
+    	for (int i = 0; i < count; i++) {
+    		eventLine = (EditEventTypeLineView)_eventTypeLines.getChildAt( i );
+    		
+    		_deletingSome = ( _deletingSome || eventLine.isSelected() ); // Flag that we are deleting some
+    		eventLine.setDeleted( eventLine.isSelected() );
     	}
     }
     
@@ -109,7 +134,7 @@ public class EditEventTypesActivity extends Activity {
 				break;
 			
 			case R.id.btn_delete:
-				// TODO Delete things
+				flagDeletedRows();
 				break;
 			}
 		}

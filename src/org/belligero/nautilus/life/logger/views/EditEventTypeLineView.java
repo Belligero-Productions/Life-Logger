@@ -1,23 +1,23 @@
 package org.belligero.nautilus.life.logger.views;
 
 import org.belligero.nautilus.life.logger.EditEventTypesActivity;
-import org.belligero.nautilus.life.logger.LifeLoggerActivity;
 import org.belligero.nautilus.life.logger.R;
 import org.belligero.nautilus.life.logger.ojects.EventType;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TableRow;
 import android.widget.ToggleButton;
 
 public class EditEventTypeLineView extends RelativeLayout {
 	private EventType _eventType;
 	private EditEventTypesActivity _editTypesActivity;
+	private boolean _isDeleted = false;
 	
 	private CheckBox _check_selected;
 	private EditText _edit_name;
@@ -53,11 +53,13 @@ public class EditEventTypeLineView extends RelativeLayout {
 	 * @return EventType containing the new edited values.
 	 */
 	public EventType getEventType() {
-		return new EventType(
+		EventType ret = new EventType(
 				_eventType.getID(),
-				_check_selected.isChecked(),
+				_toggle_isActive.isChecked(),
 				_edit_name.getText().toString()
 			);
+		
+		return ret;
 	}
 	
 	public void setEventType( EventType eventType ) {
@@ -67,11 +69,36 @@ public class EditEventTypeLineView extends RelativeLayout {
 		_toggle_isActive.setChecked( eventType.isActive() );
 	}
 	
+	public boolean isDeleted() {
+		return _isDeleted;
+	}
+	
+	public void setDeleted( boolean isDeleted ) {
+		_isDeleted = isDeleted;
+		_check_selected.setEnabled( !isDeleted );
+		_edit_name.setEnabled( !isDeleted );
+		_toggle_isActive.setEnabled( !isDeleted );
+		
+		if (isDeleted) {
+			// Add strikethrough
+			_edit_name.setPaintFlags( _edit_name.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG );
+			_check_selected.setChecked( false ); // unselect it, so it doesn't get processed again later
+			_toggle_isActive.setChecked( false );
+		} else {
+			// Remove strikethrough
+			_edit_name.setPaintFlags( _edit_name.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG );
+		}
+	}
+	
 	/**
 	 * Whether this Event Type has been selected (via checkbox) or not.
 	 * @return boolean true if selected, false if not
 	 */
 	public boolean isSelected() {
 		return _check_selected.isChecked();
+	}
+	
+	public void setSelected( boolean isSelected ) {
+		_check_selected.setChecked( isSelected );
 	}
 }

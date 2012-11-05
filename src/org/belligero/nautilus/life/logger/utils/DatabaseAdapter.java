@@ -121,7 +121,7 @@ public class DatabaseAdapter {
 				);
 			values.put(
 					EventType.ACTIVE,
-					(eventType.isActive() ? "1" : "0")
+					(eventType.isActive() ? 1 : 0)
 				);
 			
 			return _dbConnection.update(
