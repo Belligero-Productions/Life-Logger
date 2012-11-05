@@ -112,17 +112,25 @@ public class LifeLoggerActivity extends Activity {
 		if (LifeLoggerActivity.instance == null) LifeLoggerActivity.instance = this;
 		
 		_logButtons.removeAllViews();
-		HashMap<Integer, String> idNameMapping = new HashMap<Integer, String>(); // TODO Get rid of this hashmap
+		HashMap<Long, String> idNameMapping = new HashMap<Long, String>(); // TODO Get rid of this hashmap
 
 		Calendar cal = Calendar.getInstance();
 		
 		// Load the buttons
 		EventTypeIterator eventTypeIterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
 		for (EventType eventType : eventTypeIterator) {
-			idNameMapping.put(Integer.valueOf(eventType.getID()), eventType.getName());
+			idNameMapping.put(
+					eventType.getID(),
+					eventType.getName()
+				);
 			
 			if (eventType.isActive()) {
-				_logButtons.addView(new LogEventLineView(this, eventType));
+				_logButtons.addView(
+						new LogEventLineView(
+								this,
+								eventType
+							)
+					);
 			}
 		}
 		

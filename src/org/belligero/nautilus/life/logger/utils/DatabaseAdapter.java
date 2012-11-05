@@ -18,12 +18,17 @@ public class DatabaseAdapter {
 	private DatabaseHelper _dbHelper;
 	private final Context _context;
 	
-	private static final String CREATE_TABLE_EVENT_TYPE = "CREATE TABLE event_type (id integer primary key, type_name varchar(45), active integer)",
-								CREATE_TABLE_EVENT = "CREATE TABLE event (id integer primary key, event_time integer, event_type integer)",
-								DATABASE_NAME = "data";
-	private static final String TABLE_EVENT_TYPE = "event_type",
-								TABLE_EVENT = "event";
-	private static final int DATABASE_VERSION = 1;
+	private static final String
+		CREATE_TABLE_EVENT_TYPE = "CREATE TABLE event_type (id integer primary key, type_name varchar(45), active integer)",
+		CREATE_TABLE_EVENT = "CREATE TABLE event (id integer primary key, event_time integer, event_type integer)",
+		DATABASE_NAME = "data";
+	
+	private static final String
+		TABLE_EVENT_TYPE = "event_type",
+		TABLE_EVENT = "event";
+	
+	private static final int
+		DATABASE_VERSION = 1;
 	
 	/***********************************************************************************/
 	
@@ -84,6 +89,30 @@ public class DatabaseAdapter {
 	
 	public class EventTypeHandler {
 		/********************************** Insert, Update, Delete *****************************************/
+		public EventType insertEventType( EventType eventType ) {
+			ContentValues values = new ContentValues();
+			values.put(
+					EventType.NAME,
+					eventType.getName()
+				);
+			values.put(
+					EventType.ACTIVE,
+					( eventType.isActive() ? 1 : 0 )
+				);
+			
+			long id = _dbConnection.insert(
+					TABLE_EVENT_TYPE,
+					null,
+					values
+				);
+			
+			if ( id < 0 ) {
+				throw new RuntimeException( "Error occured inserting new EventType" );
+			}
+			
+			return eventType.setID( id );
+		}
+		
 		public long updateEventType(EventType eventType) {
 			ContentValues values = new ContentValues();
 			values.put(
@@ -229,7 +258,7 @@ public class DatabaseAdapter {
 				);
 		}
 		
-		public EventIterator fetchRecentEvents(int eventTypeID) {
+		public EventIterator fetchRecentEvents( long eventTypeID ) {
 			String[] columns = new String[]{
 					Event.TIME,
 					Event.EVENT_TYPE
@@ -241,7 +270,7 @@ public class DatabaseAdapter {
 							columns,
 							Event.EVENT_TYPE + "=?",
 							new String[]{
-									Integer.toString( eventTypeID )
+									Long.toString( eventTypeID )
 								},
 							null,
 							null,

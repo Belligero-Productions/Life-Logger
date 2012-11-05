@@ -40,7 +40,7 @@ public class ExportDataActivity extends Activity {
 		btn_export = (Button)findViewById(R.id.btn_exportData);
 		edit_fileName = (EditText)findViewById(R.id.edit_fileName);
 		_dbHelper = new DatabaseAdapter(this).open();
-		// TODO Find a better way of doing this, something with a list
+		
 		// TODO Make this use the new dynamic view control
     	_checkBoxes = new CheckBox[]{
     			(CheckBox)findViewById(R.id.check_export1),

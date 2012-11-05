@@ -18,6 +18,9 @@
     <!-- Button names -->
     <string name="btn_logEvent">Log</string>
     <string name="btn_viewRecent">View Recent</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_delete">Delete</string>
     
     <!-- Toggle switches -->
     <string name="toggle_active">Active</string>

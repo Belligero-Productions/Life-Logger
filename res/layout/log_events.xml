@@ -29,6 +29,7 @@
     		/>
 	    </LinearLayout>
 	    
+	    <!-- TODO make this look like a proper title -->
 		<TextView  
 		    android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content" 
@@ -37,14 +38,14 @@
 		    android:text="@string/header_logButtons"
 	    />
 		    
-		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			android:id="@+id/container_logButtons"
+		<LinearLayout android:id="@+id/container_logButtons"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
 		>
 		</LinearLayout>
 		
+		<!-- TODO find out if this ScrollView is still needed on 2.2 and 4.1 -->
 		<ScrollView
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"

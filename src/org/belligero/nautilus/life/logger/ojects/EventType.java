@@ -6,45 +6,48 @@ public class EventType {
 		NAME = "type_name",
 		ACTIVE = "active";
 	
-	protected int _id;
+	protected long _id;
 	protected boolean _isActive;
 	protected String _name;
 	
 	public EventType() {}
 	
-	public EventType(int id, int active, String name) {
+	public EventType(long id, int active, String name) {
 		_id = id;
 		_isActive = (active == 1);
 		_name = name;
 	}
 	
-	public EventType(int id, boolean isActive, String name) {
+	public EventType(long id, boolean isActive, String name) {
 		_id = id;
 		_isActive = isActive;
 		_name = name;
 	}
 
-	public int getID() {
+	public long getID() {
 		return _id;
 	}
 
-	public void setID(int id) {
+	public EventType setID(long id) {
 		this._id = id;
+		return this;
 	}
 
 	public boolean isActive() {
 		return _isActive;
 	}
 
-	public void setActive(boolean active) {
+	public EventType setActive(boolean active) {
 		this._isActive = active;
+		return this;
 	}
 
 	public String getName() {
 		return _name;
 	}
 
-	public void setName(String name) {
+	public EventType setName(String name) {
 		this._name = name;
+		return this;
 	}
 }
