@@ -25,7 +25,13 @@ public class EditEventTypeLineView extends RelativeLayout {
 	
 	public EditEventTypeLineView(Context context, EventType eventType) {
 		super(context);
-		addView( View.inflate( context, R.layout.view_edit_event_type_line, null ) );
+		addView(
+				View.inflate(
+						context,
+						R.layout.view_edit_event_type_line,
+						null
+					)
+			);
 		
 		_eventType = eventType;
 		_editTypesActivity = (EditEventTypesActivity)context;

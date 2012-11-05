@@ -113,7 +113,7 @@ public class DatabaseAdapter {
 			return eventType.setID( id );
 		}
 		
-		public long updateEventType(EventType eventType) {
+		public long updateEventType( EventType eventType ) {
 			ContentValues values = new ContentValues();
 			values.put(
 					EventType.NAME,
@@ -129,6 +129,18 @@ public class DatabaseAdapter {
 					values,
 					EventType.ID + "=" + eventType.getID(),
 					null
+				);
+		}
+		
+		public long deleteEventType( EventType eventType ) {
+			eventHandler.deleteEventsOfType( eventType.getID() );
+			
+			return _dbConnection.delete(
+					TABLE_EVENT_TYPE,
+					EventType.ID + " = ?",
+					new String[] {
+							Long.toString( eventType.getID() )
+						}
 				);
 		}
 		
@@ -156,7 +168,7 @@ public class DatabaseAdapter {
 	
 	public class EventHandler {
 		/********************************** Insert, Update, Delete *****************************************/
-		public long insertEvent(Event event) {
+		public long insertEvent( Event event ) {
 			ContentValues values = new ContentValues();
 			values.put(
 					Event.TIME,
@@ -171,6 +183,31 @@ public class DatabaseAdapter {
 					TABLE_EVENT,
 					null,
 					values
+				);
+		}
+		
+		public long deleteEventsOfType( long eventTypeID ) {
+			return _dbConnection.delete(
+					TABLE_EVENT,
+					Event.EVENT_TYPE + " = ?",
+					new String[] {
+							Long.toString( eventTypeID )
+						}
+				);
+		}
+		
+		public long deleteEvent( Event event ) {
+			String whereClause =
+					Event.EVENT_TYPE + " = ?"
+					+ " AND " + Event.TIME + " = ?";
+			
+			return _dbConnection.delete(
+					TABLE_EVENT,
+					whereClause,
+					new String[] {
+							Long.toString( event.getEventTypeID() ),
+							Long.toString( event.getTimeStamp() )
+						}
 				);
 		}
 		
@@ -194,7 +231,7 @@ public class DatabaseAdapter {
 				);
 		}
 		
-		public EventIterator fetchAllEventsOfType(int eventTypeID) {
+		public EventIterator fetchAllEventsOfType( int eventTypeID ) {
 			String[] columns = new String[]{
 					Event.TIME,
 					Event.EVENT_TYPE
@@ -204,7 +241,7 @@ public class DatabaseAdapter {
 					_dbConnection.query(
 							TABLE_EVENT,
 							columns,
-							Event.EVENT_TYPE + "=?",
+							Event.EVENT_TYPE + " = ?",
 							new String[]{
 									Integer.toString( eventTypeID )
 								},
@@ -215,7 +252,7 @@ public class DatabaseAdapter {
 				);
 		}
 		
-		public EventIterator fetchAllEventsOfType(String eventTypeName) {
+		public EventIterator fetchAllEventsOfType( String eventTypeName ) {
 			String[] columns = new String[]{
 					EventType.ID
 				};
@@ -243,7 +280,11 @@ public class DatabaseAdapter {
 		}
 		
 		public EventIterator fetchRecentEvents() {
-			String[] columns = new String[]{Event.TIME, Event.EVENT_TYPE};
+			String[] columns = new String[]{
+					Event.TIME,
+					Event.EVENT_TYPE
+				};
+			
 			return new EventIterator(
 					_dbConnection.query(
 							TABLE_EVENT,

@@ -9,15 +9,11 @@
     <string name="events_updated">Events updated. Reloading.</string>
     <string name="export_data">Export records to CSV</string>
     <string name="stats">Statistics</string>
-    <string name="export_fileName">lifeLogger.csv</string>
-    <string name="export_button">Export selected records</string>
-    <string name="no_storage">External storage is not available</string>
-    <string name="export_complete">File was successfully exported</string>
-    <string name="export_error">An error occured writing the file</string>
     
     <!-- Button names -->
     <string name="btn_logEvent">Log</string>
     <string name="btn_viewRecent">View Recent</string>
+    <string name="btn_add">Add New</string>
     
     <string name="btn_save">Save</string>
     <string name="btn_cancel">Cancel</string>
@@ -33,7 +29,16 @@
     <string name="tab_stats">Statistics</string>
     
     <!-- Edit Event Types -->
-    <string name="confirm_delete">Are you sure you want to delete these events?\n\nThis cannot be undone.</string>
+    <string name="default_eventTypeName">New Event</string>
+    <string name="confirm_deleteTitle">Confirm Delete?</string>
+    <string name="confirm_delete">Are you sure you want to delete these events and their associated logs?\n\nThis cannot be undone.</string>
+    
+    <!-- Export events -->
+    <string name="btn_export">Export selected records</string>
+    <string name="export_fileName">lifeLogger.csv</string>
+    <string name="no_storage">External storage is not available</string>
+    <string name="export_complete">File was successfully exported</string>
+    <string name="export_error">An error occured writing the file</string>
     
     <!-- Statistics -->
     <string name="stats_total">Total</string>

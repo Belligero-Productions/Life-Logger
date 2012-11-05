@@ -37,8 +37,6 @@ public class StatisticsActivity extends Activity {
 	private String _eventTypeName;
 	
 	private DatabaseAdapter _dbHelper;
-	private DatabaseAdapter.EventHandler _eventHandler;
-	private DatabaseAdapter.EventTypeHandler _eventTypeHandler;
 
 	/********************************** Life cycle Functions *******************************************/
 	@Override
@@ -60,7 +58,7 @@ public class StatisticsActivity extends Activity {
 	private void setupSpinner() {
 		List<CharSequence> arr = new ArrayList<CharSequence>();
 		
-		EventTypeIterator iterator = _eventTypeHandler.fetchAllEventTypes();
+		EventTypeIterator iterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
 		for (EventType eventType : iterator) {
 			arr.add(eventType.getName());
 		}
@@ -146,7 +144,7 @@ public class StatisticsActivity extends Activity {
 		}
 		
 		public void run() {
-			EventIterator iterator = _eventHandler.fetchAllEventsOfType( _eventTypeName );
+			EventIterator iterator = _dbHelper.eventHandler.fetchAllEventsOfType( _eventTypeName );
 			
 			Calendar startDate = null, endDate = null, tempDate;
 			Calendar currDate = Calendar.getInstance();

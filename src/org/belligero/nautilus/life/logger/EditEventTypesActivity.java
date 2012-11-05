@@ -2,6 +2,7 @@ package org.belligero.nautilus.life.logger;
 
 import org.belligero.nautilus.life.logger.ojects.EventType;
 import org.belligero.nautilus.life.logger.ojects.EventTypeIterator;
+import org.belligero.nautilus.life.logger.utils.ConfirmResultListener;
 import org.belligero.nautilus.life.logger.utils.DatabaseAdapter;
 import org.belligero.nautilus.life.logger.utils.Utils;
 import org.belligero.nautilus.life.logger.views.EditEventTypeLineView;
@@ -15,42 +16,61 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-public class EditEventTypesActivity extends Activity {
+public class EditEventTypesActivity extends Activity {	
 	private DatabaseAdapter _dbHelper;
-	private static final String TAG = "LifeLogger::EditEvents";
+	private static final String
+		TAG = "LifeLogger::EditEvents";
+	private static final short
+		ASK_DELETE = 0,
+		CONFIRM_DELETE = 1,
+		NO_DELETE = 2;
 	
 	private LinearLayout _eventTypeLines;
 	
 	private int _numSelected;
+	private short _confirmDelete = ASK_DELETE;
 	private boolean _deletingSome = false;
 	
 	private Button _btn_save,
-					_btn_delete,
-					_btn_cancel;
+					_btn_cancel,
+					_btn_add;
+	private ImageButton _btn_delete;
+	
+	private Bundle _bundle;
 	
 	/********************************** Lifecycle Functions ********************************************/
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.edit_event_types);
 		
+		_bundle = savedInstanceState;
 		_dbHelper = new DatabaseAdapter(this).open();
 		_eventTypeLines = (LinearLayout) findViewById( R.id.container_editEventType );
 		
 		_btn_save = (Button) findViewById( R.id.btn_save );
-		_btn_delete = (Button) findViewById( R.id.btn_delete );
+		_btn_delete = (ImageButton) findViewById( R.id.btn_delete );
 		_btn_cancel = (Button) findViewById( R.id.btn_cancel );
+		_btn_add = (Button) findViewById( R.id.btn_add );
 		
 		_btn_save.setOnClickListener( btnClick );
 		_btn_delete.setOnClickListener( btnClick );
 		_btn_cancel.setOnClickListener( btnClick );
+		_btn_add.setOnClickListener( btnClick );
+		
+		_btn_delete.setEnabled( false );
 		
 		fillData();
 	}
 	
-	public void finish() {
+	public void finish( boolean saved ) {
 		_dbHelper.close();
+		
+		setResult(
+				saved ? RESULT_OK : RESULT_CANCELED
+			);
 		super.finish();
 	}
     
@@ -78,35 +98,62 @@ public class EditEventTypesActivity extends Activity {
     	_btn_delete.setEnabled( _numSelected > 0 );
     }
     
+    /********************************** Private Functions **********************************************/
+    private void addRow() {
+    	EventType eventType = new EventType(
+    			0,
+    			true,
+    			this.getString( R.string.default_eventTypeName )
+			);
+    	EditEventTypeLineView eventLine = new EditEventTypeLineView(
+    			this,
+    			eventType
+			);
+    	
+    	_eventTypeLines.addView( eventLine );
+    }
+    
     private void saveData() {
     	int count = _eventTypeLines.getChildCount();
     	EditEventTypeLineView eventLine;
     	EventType eventType;
     	
+    	// Confirm that we want to delete things
+    	if ( _deletingSome && _confirmDelete == ASK_DELETE ) {
+    		Utils.confirm(
+    				this,
+    				"My Title",
+    				this.getString( R.string.confirm_delete ),
+    				confirmDeleteListener
+				);
+    		
+    		return;
+    	}
+    	
+    	// Loop over the lines and save them
     	for (int i = 0; i < count; i++) {
     		eventLine = (EditEventTypeLineView) _eventTypeLines.getChildAt( i );
     		saveRowData( eventLine );
     	}
-    	
-    	// TODO Toast popup indicating they've been saved
+
+    	finish( true );
     }
     
-    private void saveRowData(EditEventTypeLineView eventLine) {
+    private void saveRowData( EditEventTypeLineView eventLine ) {
     	EventType eventType = eventLine.getEventType();
     	
-    	// TODO Delete things
-    	// Confirm our delete
-    	boolean doDelete = Utils.confirm(
-    			this,
-    			"", // TODO Set a title (if needed)
-    			this.getString( R.string.confirm_delete )
-    		);
-    	
-    	if ( eventType.getID() == 0 ) {
-    		eventType = _dbHelper.eventTypeHandler.insertEventType( eventType );
-    		eventLine.setEventType( eventType );
+    	if ( eventLine.isDeleted() ) {
+    		// Only delete if it's not new, and we've confirmed we want to delete
+    		if ( eventType.getID() > 0 && _confirmDelete == CONFIRM_DELETE ) {
+    			_dbHelper.eventTypeHandler.deleteEventType( eventType );
+    		}
     	} else {
-    		_dbHelper.eventTypeHandler.updateEventType( eventType );
+    		if ( eventType.getID() == 0 ) { // New
+        		eventType = _dbHelper.eventTypeHandler.insertEventType( eventType );
+        		eventLine.setEventType( eventType );
+        	} else { // Updating
+        		_dbHelper.eventTypeHandler.updateEventType( eventType );
+        	}	
     	}
     }
     
@@ -122,6 +169,7 @@ public class EditEventTypesActivity extends Activity {
     	}
     }
     
+    /********************************** Event Listeners ************************************************/
     private OnClickListener btnClick = new OnClickListener() {
 		
 		public void onClick( View v ) {
@@ -129,14 +177,33 @@ public class EditEventTypesActivity extends Activity {
 			
 			case R.id.btn_save:
 				saveData();
+				break;
+			
 			case R.id.btn_cancel:
-				finish();
+				finish( false );
 				break;
 			
 			case R.id.btn_delete:
 				flagDeletedRows();
 				break;
+				
+			case R.id.btn_add:
+				addRow();
+				break;
 			}
+		}
+	};
+	
+	private ConfirmResultListener confirmDeleteListener = new ConfirmResultListener() {
+		
+		public void deny() {
+			_confirmDelete = NO_DELETE;
+			saveData();
+		}
+		
+		public void confirm() {
+			_confirmDelete = CONFIRM_DELETE;
+			saveData();
 		}
 	};
 }

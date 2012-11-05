@@ -2,8 +2,6 @@ package org.belligero.nautilus.life.logger.utils;
 
 import java.util.Calendar;
 
-import org.belligero.nautilus.life.logger.R;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,9 +23,32 @@ public class Utils {
 		return year + "-" + (month < 9 ? "0"+(month+1) : month+1) + "-" + (day <= 9 ? "0"+day : day);
 	}
 	
-	// TODO Make this have passback functions, so it can be made more generic
-	public static final boolean confirm( Context context, String title, String message ) {
-		final boolean[] confirm = new boolean[1];
+	/**
+	 * Create a confirmation dialog which will use a ConfirmResultListener to return the results.
+	 * 
+	 * @param context The activity context to create a dialog with
+	 * @param titleResId String resource ID of the title for the dialog
+	 * @param messageResId String resource ID of the message to show in the dialog
+	 * @param confirmResultListener A ConfirmResultListener to call the "confirm" or "deny" methods of
+	 */
+	public static final void confirm( Context context, int titleResId, int messageResId, final ConfirmResultListener confirmResultListener ) {
+		confirm(
+				context,
+				context.getString( titleResId ),
+				context.getString( messageResId ),
+				confirmResultListener
+			);
+	}
+	
+	/**
+	 * Create a confirmation dialog which will use a ConfirmResultListener to return the results.
+	 * 
+	 * @param context The activity context to create a dialog with
+	 * @param title The title for the dialog
+	 * @param message The message to display in the dialog
+	 * @param confirmResultListener A ConfirmResultListener to call the "confirm" or "deny" methods of
+	 */
+	public static final void confirm( Context context, String title, String message, final ConfirmResultListener confirmResultListener ) {
 		
 		AlertDialog dialog = new AlertDialog.Builder( context ).create();
 		dialog.setTitle( title );
@@ -39,7 +60,7 @@ public class Utils {
 				context.getText( android.R.string.yes ),
 				new DialogInterface.OnClickListener() {	
 					public void onClick( DialogInterface dialog, int which ) {
-						confirm[0] = true;
+						confirmResultListener.confirm();
 					}
 				}
 			);
@@ -49,14 +70,12 @@ public class Utils {
 				context.getText( android.R.string.no ),
 				new DialogInterface.OnClickListener() {
 					public void onClick( DialogInterface dialog, int which ) {
-						confirm[0] = false;
+						confirmResultListener.deny();
 					}
 				}
 			);
 		
 		dialog.setIcon( android.R.drawable.ic_dialog_alert );
 		dialog.show();
-		
-		return confirm[0];
 	}
 }
