@@ -78,10 +78,6 @@ public class LoggerTabs extends TabActivity {
 			intent = new Intent( this, EditEventTypesActivity.class );
 			startActivityForResult( intent, ACTIVITY_ID_EDIT_EVENT_TYPES );
 			return true;
-		case R.id.menu_exportData:
-			intent = new Intent( this, ExportDataActivity.class );
-			startActivity( intent );
-			return true;
 		default:
 			return super.onOptionsItemSelected( item );
 		}

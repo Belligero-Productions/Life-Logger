@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SDK version 15 - Android 4.0 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+        
+    <Button android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/btn_delete"
+        
+        android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
+        android:text="@string/btn_cancel"
+    />
+    
+    <ImageButton android:id="@+id/btn_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        
+        android:text="@string/btn_delete"
+        android:src="@android:drawable/ic_menu_delete"
+        android:contentDescription="@string/btn_delete"
+        android:enabled="false"
+    />
+    
+	<Button android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/btn_delete"
+        
+        android:drawableRight="@android:drawable/ic_menu_save"
+        android:text="@string/btn_save"
+    />
+	
+</RelativeLayout>

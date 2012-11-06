@@ -2,10 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
     	android:id="@+id/menu_editEvents"
+    	android:icon="@android:drawable/ic_menu_edit"
+    	android:showAsAction="ifRoom"
     	android:title="@string/edit_events"
-    	/>
-    <item
-    	android:id="@+id/menu_exportData"
-    	android:title="@string/export_data"
     	/>
 </menu>
