@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+>
+    
+	<TextView android:id="@+id/text_eventName"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    
+	    android:layout_alignParentLeft="true"
+	    android:text="Event Name"
+    />
+	
+	<TextView android:id="@+id/text_eventTime"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    
+	    android:layout_centerHorizontal="true"
+	    android:text="11:45am"
+	/>
+	
+	<TextView android:id="@+id/text_eventDate"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    
+	    android:layout_alignParentRight="true"
+	    android:text="2012-11-05"
+	/>
+</RelativeLayout>

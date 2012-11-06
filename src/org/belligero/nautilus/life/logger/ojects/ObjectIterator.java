@@ -1,6 +1,7 @@
 package org.belligero.nautilus.life.logger.ojects;
 
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import android.annotation.TargetApi;
@@ -45,6 +46,17 @@ public abstract class ObjectIterator<E> implements Iterable<E>, Iterator<E> {
 	/********************************** Other Public Functions *****************************************/
 	public int count() {
 		return _cursor.getCount();
+	}
+	
+	public ArrayList<E> toArrayList() {
+		ArrayList<E> list = new ArrayList<E>( this.count() );
+		
+		_cursor.moveToPosition( -1 );
+		for ( E obj : this ) {
+			list.add( obj );
+		}
+		
+		return list;
 	}
 	
 	/********************************** Abstract Functions *********************************************/

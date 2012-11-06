@@ -150,7 +150,7 @@ public class DatabaseAdapter {
 					EventType.ID,
 					EventType.NAME,
 					EventType.ACTIVE
-				}; 
+				};
 			
 			return new EventTypeIterator( 
 					_dbConnection.query(
@@ -163,6 +163,29 @@ public class DatabaseAdapter {
 							EventType.ID
 						)
 				);
+		}
+		
+		public EventType fetchEventTypeWithID( long eventTypeID ) {
+			String[] columns = new String[]{
+					EventType.ID,
+					EventType.NAME,
+					EventType.ACTIVE
+				};
+			
+			return new EventTypeIterator(
+					_dbConnection.query(
+							TABLE_EVENT_TYPE,
+							columns,
+							EventType.ID + " = ?",
+							new String[] {
+								Long.toString( eventTypeID )	
+							},
+							null,
+							null,
+							null,
+							"1"
+						)
+				).next();
 		}
 	} // EventTypeHandler
 	
