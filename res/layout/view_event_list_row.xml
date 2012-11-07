@@ -2,6 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    
+    android:clickable="true"
+    android:longClickable="true"
+    style="@android:style/Widget.DeviceDefault.Button.Borderless.Small"
 >
     
 	<TextView android:id="@+id/text_eventName"

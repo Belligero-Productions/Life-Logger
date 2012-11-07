@@ -1,57 +1,92 @@
 package org.belligero.nautilus.life.logger.utils;
 
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 
 import org.belligero.nautilus.life.logger.R;
 import org.belligero.nautilus.life.logger.ojects.*;
-import org.belligero.nautilus.life.logger.views.EventListRowView;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
+import android.view.View.OnLongClickListener;
+import android.widget.TextView;
 
-public class EventListLoader extends BaseAdapter {
+public class EventListLoader {	
+	private static final int
+		ROW_VIEW_RESOURCE_ID = R.layout.view_event_list_row;
+	
 	private DatabaseAdapter _dbHelper;
 	private Context _context;
-	private Event[] _events;
+	private ViewGroup _container;
 	
-	public EventListLoader( Context context, Event[] events ) {
+	public EventListLoader( Context context, ViewGroup containerView ) {
 		super();
-		
 		_context = context;
+		
 		_dbHelper = new DatabaseAdapter( context );
-		_events = events;
+		_container = containerView;
 	}
 
-	public View getView( int position, View convertView, ViewGroup parent ) {
-		Log.d( "EventListLoader::getView()", "Position: "+position );
-		Event event = (Event) this.getItem( position );
-		EventType eventType = _dbHelper.eventTypeHandler.fetchEventTypeWithID( event.getEventTypeID() ); // TODO Cache these
+	public void populateList( EventIterator eventIterator ) {
+		populateList( eventIterator, null, null );
+	}
+	
+	public void populateList( EventIterator eventIterator, OnClickListener onClickListener, OnLongClickListener onLongClickListener ) {
+		// TODO make this load in a separate thread
+		eventIterator.reset();
+		_container.removeAllViews();
 		
-		View rowView = convertView;
-		if (convertView == null) {
-			convertView = new EventListRowView(
-					_context,
-					event,
-					eventType
-				);
+		// Get a ID-eventType mapping
+		EventTypeIterator typeIterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
+		HashMap<Long, EventType> typeMapping
+				= new HashMap<Long, EventType>( typeIterator.count() );
+		
+		for ( EventType eventType : typeIterator ) {
+			typeMapping.put( eventType.getID(), eventType );
 		}
 		
-		return convertView;
+		// Actually add the viewss
+		View rowView;
+		
+		for ( Event event : eventIterator ) {
+			rowView = addRow( event, typeMapping.get( event.getEventTypeID() ), false );
+			rowView.setOnClickListener( onClickListener );
+			rowView.setOnLongClickListener( onLongClickListener );
+		}
 	}
-
-	public int getCount() {
-		return _events.length;
+	
+	private View _rowView;
+	
+	public View addRow( Event event, EventType eventType, boolean toStart ) {
+		_rowView = getRow( event, eventType );
+		
+		if ( toStart ) {
+			_container.addView( _rowView, 0 );
+		} else {
+			_container.addView( _rowView );
+		}
+		
+		return _rowView;
 	}
-
-	public Object getItem( int position ) {
-		return _events[position];
-	}
-
-	public long getItemId( int position ) {
-		return position;
+	
+	private View getRow( Event event, EventType eventType ) {
+		View rowView = View.inflate( _context, ROW_VIEW_RESOURCE_ID, null );
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis( event.getTimeStamp() * 1000 );
+		
+		TextView text_name = (TextView) rowView.findViewById( R.id.text_eventName );
+		TextView text_date = (TextView) rowView.findViewById( R.id.text_eventDate );
+		TextView text_time = (TextView) rowView.findViewById( R.id.text_eventTime );
+		
+		text_name.setText( eventType.getName() );
+		text_date.setText( Utils.getDateString( cal ) );
+		text_time.setText( Utils.getTimeString( cal ) );
+		
+		rowView.setTag( event );
+		
+		return rowView;
 	}
 }

@@ -34,18 +34,22 @@ public abstract class ObjectIterator<E> implements Iterable<E>, Iterator<E> {
 		
 		return ret;
 	}
-
-	public Iterator<E> iterator() {
-		return this;
-	}
 	
 	public void remove() {
 		
 	}
 
+	public Iterator<E> iterator() {
+		return this;
+	}
+
 	/********************************** Other Public Functions *****************************************/
 	public int count() {
 		return _cursor.getCount();
+	}
+	
+	public void reset() {
+		_cursor.moveToPosition( -1 );
 	}
 	
 	public ArrayList<E> toArrayList() {
