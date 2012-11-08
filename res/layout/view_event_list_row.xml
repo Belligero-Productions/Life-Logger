@@ -7,7 +7,14 @@
     android:longClickable="true"
     
     style="@style/selectableItem"
->        
+>
+	
+    <View android:layout_width="fill_parent"
+        android:layout_height="1sp"
+        android:layout_alignParentTop="true"
+        
+        style="@style/horizontal_line"
+    />
     
 	<TextView android:id="@+id/text_eventName"
 	    android:layout_width="wrap_content"
@@ -35,7 +42,9 @@
 	/>
 	
     <View android:layout_width="fill_parent"
-        android:layout_height="2sp"
+        android:layout_height="1sp"
+        android:layout_alignParentBottom="true"
+        
         style="@style/horizontal_line"
     />
 </RelativeLayout>

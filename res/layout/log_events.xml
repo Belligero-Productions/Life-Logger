@@ -8,6 +8,8 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
     >
+    	<!-- Date & Time -->
+    	
 	    <LinearLayout
 	    	android:layout_width="fill_parent"
 	    	android:layout_height="wrap_content"
@@ -19,6 +21,9 @@
 	    		android:layout_height="fill_parent"
 	    		android:text="July 20, 2011"
 	    		android:layout_weight="2"
+	    		
+	    		android:gravity="center"
+	    		style="@android:style/Widget.DeviceDefault.Spinner"
     		/>
 	    	<Button
 	    		android:id="@+id/btn_time"
@@ -26,24 +31,50 @@
 	    		android:layout_height="fill_parent"
 	    		android:text="3:37pm"
 	    		android:layout_weight="2"
+	    		
+	    		android:gravity="center"
+	    		style="@android:style/Widget.DeviceDefault.Spinner"
     		/>
 	    </LinearLayout>
 	    
-	    <!-- TODO make this look like a proper title -->
+	    
+	    <!-- "Log Events" title -->
+	    
 		<TextView  
 		    android:layout_width="fill_parent" 
 		    android:layout_height="wrap_content" 
 		    
-		    style="@android:style/TextAppearance.DeviceDefault.Widget.ActionBar.Subtitle"
 		    android:text="@string/header_logButtons"
-	    />
 		    
+		    style="@style/titleText"
+	    />
+		<include layout="@layout/chunk_title_line" />
+		    
+		
+		<!-- Event Type lines -->
+		
 		<LinearLayout android:id="@+id/container_logButtons"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
 		>
 		</LinearLayout>
+		
+		
+		<!-- "Recent Events" title -->
+		
+		<TextView  
+		    android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+		    
+		    android:text="@string/header_recentEvents"
+		    
+		    style="@style/titleText"
+	    />
+		<include layout="@layout/chunk_title_line" />
+		
+		
+		<!-- Recent events -->
 		
 		<LinearLayout android:id="@+id/container_recent"
 		    android:layout_width="fill_parent"

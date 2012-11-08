@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- Work in progress on creating transparent buttons with thin border -->
+    
+    <!-- Enabled -->
+    <item android:state_enabled="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke android:color="@android:color/darker_gray" android:width="1sp" />
+        </shape>
+    </item>
+    
+    <!-- Disabled -->
+    
+    <!-- Focused -->
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            
+        	<solid android:color="@android:color/white" />
+        </shape>
+    </item>
+    
+    <!-- Pressed -->
+    <item android:state_pressed="true">
+        <shape>
+        	<solid android:color="@android:color/background_light" />    
+        </shape>
+        
+    </item>
+    
+</selector>

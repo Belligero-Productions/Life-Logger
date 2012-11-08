@@ -2,17 +2,18 @@
 <resources>
     <string name="hello">Hello World, LifeLoggerMain!</string>
     <string name="app_name">LifeLogger</string>
-    <string name="header_logButtons">Log Events</string>
     <string name="edit_events">Edit Events</string>
     <string name="header_active">Active</string>
     <string name="header_eventName">Event Name</string>
-    <string name="events_updated">Events updated. Reloading&#8230;</string>
-    <string name="export_data">Export records to CSV</string>
     <string name="stats">Statistics</string>
+    
+    <!-- Log Events -->
+    <string name="header_logButtons">Log Events</string>
+    <string name="header_recentEvents">Recent Events</string>
     
     <!-- Button names -->
     <string name="btn_logEvent">Log</string>
-    <string name="btn_viewRecent">View Recent</string>
+    <string name="btn_viewRecent">Recent</string>
     <string name="btn_add">Add New</string>
     
     <string name="btn_save">Save</string>
@@ -34,9 +35,10 @@
     <string name="confirm_delete">Are you sure you want to delete these events and their associated logs?\n\nThis cannot be undone.</string>
     
     <!-- Export events -->
+    <string name="export_data">Export records to CSV</string>
     <string name="btn_export">Export selected records</string>
-    <string name="export_fileName">lifeLogger.csv</string>
     <string name="no_storage">External storage is not available</string>
+    <string name="export_fileName">lifeLogger.csv</string>
     <string name="export_complete">File was successfully exported</string>
     <string name="export_error">An error occured writing the file</string>
     
@@ -46,6 +48,10 @@
     <string name="stats_activeDailyAverage">Active Daily Average</string>
     <string name="stats_weeklyAverage">Weekly Average</string>
     <string name="stats_calculating">Calculating, please wait&#8230;</string>
+    
+    <!-- Notifications/Messages -->
+    <string name="events_updated">Events updated. Reloading&#8230;</string>
+    
     
     <!-- Tag Keys -->
     <string name="key_eventTypeName">Event Type Name</string>
