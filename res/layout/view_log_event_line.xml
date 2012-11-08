@@ -40,7 +40,7 @@
 	<View
 		android:background="@android:drawable/title_bar"
 		android:layout_width="fill_parent"
-		android:layout_height="1sp"
+		android:layout_height="2sp"
 		android:layout_alignParentBottom="true"
 	/> 
 </RelativeLayout>
