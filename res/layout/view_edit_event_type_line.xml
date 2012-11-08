@@ -25,6 +25,8 @@
 	    android:layout_height="wrap_content"
 	    android:layout_alignParentRight="true"
 	    
+	    
+	    
 	    android:width="75sp"
 	    
 	    android:textOn="@string/toggle_active"

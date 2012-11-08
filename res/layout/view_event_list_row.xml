@@ -8,13 +8,6 @@
     
     style="@style/selectableItem"
 >
-	
-    <View android:layout_width="fill_parent"
-        android:layout_height="1sp"
-        android:layout_alignParentTop="true"
-        
-        style="@style/horizontal_line"
-    />
     
 	<TextView android:id="@+id/text_eventName"
 	    android:layout_width="wrap_content"
@@ -41,10 +34,7 @@
 	    android:text="2012-11-05"
 	/>
 	
-    <View android:layout_width="fill_parent"
-        android:layout_height="1sp"
-        android:layout_alignParentBottom="true"
-        
-        style="@style/horizontal_line"
-    />
+	<include layout="@layout/chunk_divider_line"
+	    android:layout_alignParentBottom="true"
+	/>
 </RelativeLayout>

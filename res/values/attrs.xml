@@ -3,23 +3,8 @@
     <declare-styleable name="LogButtons">
     	
     </declare-styleable>
-    
-    <style name="horizontal_line">
-        <item name="android:background">
-            @android:drawable/divider_horizontal_dark
-        </item>
-        <item name="android:height">
-            2dip
-        </item>
-        <item name="android:width">50dp</item>
-    </style>
-    
-    <style name="vertical_line">
-        <item name="android:background">
-            #FF0000
-        </item>
-    </style>
-    
+        
+    <!-- Special Text Styles -->
     <style name="titleText">
         <item name="android:textColor">
             @android:color/white
@@ -38,6 +23,34 @@
         </item>
         <item name="android:paddingLeft">
             10dp
+        </item>
+    </style>
+    
+    <style name="logEventNameText" parent="@style/selectableItem">
+        <item name="android:textSize">
+            17.5sp
+        </item>
+        <item name="android:gravity">
+            center_vertical
+        </item>
+    </style>
+    
+    <!-- Lines (Literally, just lines) -->
+    <style name="title_line">
+        <item name="android:background">
+            @android:color/white
+        </item>
+    </style>
+    
+    <style name="horizontal_line">
+        <item name="android:background">
+            @android:drawable/divider_horizontal_dark
+        </item>
+    </style>
+    
+    <style name="vertical_line">
+        <item name="android:background">
+            @android:drawable/divider_horizontal_dark
         </item>
     </style>
 </resources>

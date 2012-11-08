@@ -4,13 +4,6 @@
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content">
 	
-	<View android:layout_width="fill_parent"
-		android:layout_height="1sp"
-		android:layout_alignParentTop="true"
-		
-		style="@style/horizontal_line"
-	/>
-	
 	<TextView android:id="@+id/text_eventName"
 	    android:tag="text_eventName"
 		
@@ -20,29 +13,42 @@
 		android:layout_alignParentLeft="true"
 		android:layout_toLeftOf="@+id/btn_log"
 		
+		android:layout_alignTop="@+id/btn_viewRecent"
+		android:layout_alignBottom="@+id/btn_viewRecent"
+		
 		android:clickable="true"
 		android:longClickable="true"
+	    style="@style/logEventNameText"
 		
-	    style="@android:style/Widget.DeviceDefault.Button.Borderless"
+		android:text="@string/app_name"
 	/>
 	
 	<Button android:id="@+id/btn_log"
 	    android:tag="btn_log"
+		
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_toLeftOf="@+id/btn_viewRecent"
-		android:text="@string/btn_logEvent"
 		
+		android:layout_toLeftOf="@+id/btn_viewRecent"
+		android:layout_alignTop="@+id/btn_viewRecent"
+		android:layout_alignBottom="@+id/btn_viewRecent"
+		
+		android:text="@string/btn_logEvent"
 		android:drawableLeft="@android:drawable/ic_input_add"
 	/>
 	
 	<Button android:id="@+id/btn_viewRecent"
-	    
 	    android:tag="btn_viewRecent"
+		
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		
 		android:layout_alignParentRight="true"
+		
 		android:text="@string/btn_viewRecent"
 	/>
 	
+	<include layout="@layout/chunk_divider_line"
+	    android:layout_alignParentBottom="true"
+	/>
 </RelativeLayout>
