@@ -3,9 +3,12 @@
     <declare-styleable name="LogButtons">
     	
     </declare-styleable>
+    
+    <style name="text"></style>
+    <style name="line"></style>
         
     <!-- Special Text Styles -->
-    <style name="titleText">
+    <style name="text.header">
         <item name="android:textColor">
             @android:color/white
         </item>
@@ -26,7 +29,8 @@
         </item>
     </style>
     
-    <style name="logEventNameText" parent="@style/selectableItem">
+    <!-- Event Name "Buttons" -->
+    <style name="text.eventNameButton" parent="@style/selectableItem">
         <item name="android:textSize">
             17.5sp
         </item>
@@ -35,20 +39,21 @@
         </item>
     </style>
     
+    <!-- Event list items -->
+    <style name="text.eventListItem">
+        <item name="android:textSize">
+            12.5sp
+        </item>
+    </style>
+    
     <!-- Lines (Literally, just lines) -->
-    <style name="title_line">
+    <style name="line.header">
         <item name="android:background">
             @android:color/white
         </item>
     </style>
     
-    <style name="horizontal_line">
-        <item name="android:background">
-            @android:drawable/divider_horizontal_dark
-        </item>
-    </style>
-    
-    <style name="vertical_line">
+    <style name="line.divider">
         <item name="android:background">
             @android:drawable/divider_horizontal_dark
         </item>

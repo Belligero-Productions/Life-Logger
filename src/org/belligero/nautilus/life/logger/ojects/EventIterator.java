@@ -14,7 +14,8 @@ public class EventIterator extends ObjectIterator<Event> {
 		
 		this.moveToNext();
 		return new Event(
-				this.getInt( Event.EVENT_TYPE ),
+				this.getLong( Event.ID ),
+				this.getLong( Event.EVENT_TYPE ),
 				this.getLong( Event.TIME )
 			);
 	}

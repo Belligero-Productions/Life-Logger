@@ -16,6 +16,7 @@
 	    android:layout_alignParentLeft="true"
 	    android:text="Event Name"
 	    
+	    style="@style/text.eventListItem"
     />
 	
 	<TextView android:id="@+id/text_eventTime"
@@ -24,6 +25,7 @@
 	    
 	    android:layout_centerHorizontal="true"
 	    android:text="11:45am"
+	    style="@style/text.eventListItem"
 	/>
 	
 	<TextView android:id="@+id/text_eventDate"
@@ -32,6 +34,7 @@
 	    
 	    android:layout_alignParentRight="true"
 	    android:text="2012-11-05"
+	    style="@style/text.eventListItem"
 	/>
 	
 	<include layout="@layout/chunk_divider_line"

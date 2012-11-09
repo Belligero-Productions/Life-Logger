@@ -2,9 +2,11 @@ package org.belligero.nautilus.life.logger.ojects;
 
 public class Event {
 	public static final String
+		ID = "id",
 		TIME = "event_time",
 		EVENT_TYPE = "event_type";
 	
+	protected long _id;
 	protected long _eventTypeID;
 	protected long _timeStamp;
 	
@@ -15,9 +17,32 @@ public class Event {
 		_timeStamp = timeStamp;
 	}
 	
+	public Event( long id, EventType eventType, long timeStamp ) {
+		_id = id;
+		_eventTypeID = eventType.getID();
+		_timeStamp = timeStamp;
+	}
+	
 	public Event( long eventTypeID, long timeStamp ) {
 		_eventTypeID = eventTypeID;
 		_timeStamp = timeStamp;
+	}
+	
+	public Event( long id, long eventTypeID, long timeStamp ) {
+		_id = id;
+		_eventTypeID = eventTypeID;
+		_timeStamp = timeStamp;
+	}
+	
+	/**** Getters & Setters ****/
+	
+	public long getID() {
+		return _id;
+	}
+	
+	public Event setID( long id ) {
+		_id = id;
+		return this;
 	}
 
 	public long getEventTypeID() {

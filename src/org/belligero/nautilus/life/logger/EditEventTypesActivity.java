@@ -116,8 +116,8 @@ public class EditEventTypesActivity extends Activity {
     	if ( _deletingSome && _confirmDelete == ASK_DELETE ) {
     		Utils.confirm(
     				this,
-    				"My Title",
-    				this.getString( R.string.confirm_delete ),
+    				getString( R.string.confirm_deleteTitle ),
+    				getString( R.string.confirm_delete ),
     				confirmDeleteListener
 				);
     		

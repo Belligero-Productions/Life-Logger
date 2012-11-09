@@ -4,10 +4,31 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	>
+	
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        
+        style="@style/text.header"
+      	android:text="@string/header_selectEvent"
+    />
+    <include layout="@layout/chunk_title_line" />
+    
+    <!-- Event select -->
 	<Spinner android:id="@+id/spinner_selectEvent"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		/>
+	
+	<!-- Statistics header -->
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        
+        style="@style/text.header"
+      	android:text="@string/header_stats"
+    />
+    <include layout="@layout/chunk_title_line" />
+	
+    <!-- STatistics -->
 	<TableLayout android:id="@+id/container_statistics"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"

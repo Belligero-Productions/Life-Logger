@@ -86,28 +86,28 @@ public abstract class ObjectIterator<E> implements Iterable<E>, Iterator<E> {
 	 * @param columnName The String name of the column to retrieve.
 	 * @return The value for the given column.
 	 */
-	@TargetApi( 11 )
-	protected Object get(String columnName) {
-		int columnIndex = _cursor.getColumnIndex( columnName );
-		
-		switch (_cursor.getType( columnIndex )) {			
-		case Cursor.FIELD_TYPE_INTEGER:
-			return Integer.valueOf( _cursor.getInt( columnIndex ) );
-			
-		case Cursor.FIELD_TYPE_FLOAT:
-			return Float.valueOf( _cursor.getFloat( columnIndex ) );
-			
-		case Cursor.FIELD_TYPE_STRING:
-			return _cursor.getString( columnIndex );
-		
-		case Cursor.FIELD_TYPE_BLOB:
-			return _cursor.getBlob( columnIndex );
-
-		case Cursor.FIELD_TYPE_NULL:
-		default:
-			return null;	
-		}
-	}
+//	@TargetApi( 11 )
+//	protected Object get(String columnName) {
+//		int columnIndex = _cursor.getColumnIndex( columnName );
+//		
+//		switch (_cursor.getType( columnIndex )) {			
+//		case Cursor.FIELD_TYPE_INTEGER:
+//			return Integer.valueOf( _cursor.getInt( columnIndex ) );
+//			
+//		case Cursor.FIELD_TYPE_FLOAT:
+//			return Float.valueOf( _cursor.getFloat( columnIndex ) );
+//			
+//		case Cursor.FIELD_TYPE_STRING:
+//			return _cursor.getString( columnIndex );
+//		
+//		case Cursor.FIELD_TYPE_BLOB:
+//			return _cursor.getBlob( columnIndex );
+//
+//		case Cursor.FIELD_TYPE_NULL:
+//		default:
+//			return null;	
+//		}
+//	}
 	
 	protected int getInt(String columnName) {
 		return _cursor.getInt( _cursor.getColumnIndex( columnName ) );

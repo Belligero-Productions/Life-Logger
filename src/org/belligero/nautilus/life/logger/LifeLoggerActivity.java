@@ -103,7 +103,7 @@ public class LifeLoggerActivity extends Activity {
 	}
 	
 	public static void refresh() {
-		LifeLoggerActivity.instance.loadData();
+		if ( instance != null ) LifeLoggerActivity.instance.loadData();
 	}
 	
 	/*************************************** Helper Functions ******************************************/

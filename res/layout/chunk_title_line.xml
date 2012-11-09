@@ -3,8 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="2dp"
     
-    style="@style/title_line"
-    >
+    style="@style/line.header"
     
-
+    android:layout_marginBottom="4dp"
+    >
 </View>

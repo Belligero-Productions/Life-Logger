@@ -34,12 +34,15 @@ public class ExportDataActivity extends Activity {
 	
 	private LinearLayout _exportEventLines;
 	
+	private static ExportDataActivity _instance;
+	
 	/********************************** Lifecycle Functions ********************************************/
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.export_data);
 
 		_dbHelper = new DatabaseAdapter(this).open();
+		_instance = this;
 		
 		_exportEventLines = (LinearLayout) findViewById( R.id.container_exportEvents );
 		_btn_export = (Button) findViewById( R.id.btn_exportData );
@@ -64,6 +67,10 @@ public class ExportDataActivity extends Activity {
 	}
 
 	/*************************************** Helper Functions ******************************************/
+	public static void refresh() {
+		if (_instance != null) _instance.fillData();
+	}
+	
     private void fillData() {
     	_exportEventLines.removeAllViews();
     	

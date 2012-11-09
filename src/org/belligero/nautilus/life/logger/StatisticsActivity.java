@@ -31,7 +31,9 @@ public class StatisticsActivity extends Activity {
 	private static final int
 		DIALOG_PROGRESS = 1;
 	
-	private Spinner spinner_events;
+	public static StatisticsActivity _instance;
+	
+	private Spinner _spinner_events;
 	private ProgressDialog _progressDialog;
 	
 	private String _eventTypeName;
@@ -43,15 +45,19 @@ public class StatisticsActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.stats);
+
+		_dbHelper = new DatabaseAdapter(this).open();
+		_instance = this;
 		
-		spinner_events = (Spinner)findViewById(R.id.spinner_selectEvent);
-		
-		_dbHelper = new DatabaseAdapter(this);
-		_dbHelper.open();
+		_spinner_events = (Spinner)findViewById(R.id.spinner_selectEvent);
 		setupSpinner();
 	}
 	
 	/*************************************** Public Functions ******************************************/
+	public static void refresh() {
+		if (_instance != null) _instance.setupSpinner();
+	}
+	
 	
 	/*************************************** Helper Functions ******************************************/
 	private void setupSpinner() {
@@ -69,8 +75,8 @@ public class StatisticsActivity extends Activity {
 			);
 		
 		adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
-		spinner_events.setAdapter( adapter );
-		spinner_events.setOnItemSelectedListener( new OnEventSelectedListener() );
+		_spinner_events.setAdapter( adapter );
+		_spinner_events.setOnItemSelectedListener( new OnEventSelectedListener() );
 	}
 	
 	

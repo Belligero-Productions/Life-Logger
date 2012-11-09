@@ -8,6 +8,7 @@
     <string name="stats">Statistics</string>
     
     <!-- Log Events -->
+    <string name="header_dateTime">Date &amp; Time</string>
     <string name="header_logButtons">Log Events</string>
     <string name="header_recentEvents">Recent Events</string>
     
@@ -35,6 +36,8 @@
     <string name="confirm_delete">Are you sure you want to delete these events and their associated logs?\n\nThis cannot be undone.</string>
     
     <!-- Export events -->
+    <string name="header_exportSelect">Select Events to Export</string>
+    <string name="header_filename">Output Filename</string>
     <string name="export_data">Export records to CSV</string>
     <string name="btn_export">Export selected records</string>
     <string name="no_storage">External storage is not available</string>
@@ -43,6 +46,8 @@
     <string name="export_error">An error occured writing the file</string>
     
     <!-- Statistics -->
+    <string name="header_selectEvent">Select Event</string>
+    <string name="header_stats">Statistics</string>
     <string name="stats_total">Total</string>
     <string name="stats_totalDailyAverage">Total Daily Average</string>
     <string name="stats_activeDailyAverage">Active Daily Average</string>

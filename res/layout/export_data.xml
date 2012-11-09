@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	>
-    
+	
+    <!-- Select Event Title -->
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        
+        style="@style/text.header"
+      	android:text="@string/header_exportSelect"
+    />
+    <include layout="@layout/chunk_title_line" />
+	
+    <!-- List of events -->
 	<LinearLayout android:id="@+id/container_exportEvents"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
@@ -12,6 +22,15 @@
     >
 	</LinearLayout>
 
+	<!-- Filename Title -->
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        
+        style="@style/text.header"
+      	android:text="@string/header_filename"
+    />
+	
+	<!-- File Name -->
 	<EditText
 		android:id="@+id/edit_fileName"
 		android:layout_width="fill_parent"
@@ -21,10 +40,11 @@
 		android:text="@string/export_fileName"
 	/>
 
+	<!-- Export button -->
 	<Button
 		android:id="@+id/btn_exportData"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/btn_export"
 	/>
-</TableLayout>
+</LinearLayout>

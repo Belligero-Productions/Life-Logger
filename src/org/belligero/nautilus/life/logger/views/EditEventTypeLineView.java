@@ -6,6 +6,7 @@ import org.belligero.nautilus.life.logger.ojects.EventType;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -23,6 +24,8 @@ public class EditEventTypeLineView extends RelativeLayout {
 	private EditText _edit_name;
 	private ToggleButton _toggle_isActive;
 	
+	private EditEventTypeLineView _instance;
+	
 	public EditEventTypeLineView(Context context, EventType eventType) {
 		super(context);
 		addView(
@@ -35,6 +38,7 @@ public class EditEventTypeLineView extends RelativeLayout {
 		
 		_eventType = eventType;
 		_editTypesActivity = (EditEventTypesActivity)context;
+		_instance = this;
 		
 		// Get our controls
 		_check_selected = (CheckBox)this.findViewById( R.id.check_selectEventType );
@@ -104,7 +108,9 @@ public class EditEventTypeLineView extends RelativeLayout {
 		return _check_selected.isChecked();
 	}
 	
-	public void setSelected( boolean isSelected ) {
-		_check_selected.setChecked( isSelected );
+	public void setSelected( boolean selected ) {
+		if ( _check_selected.isChecked() != selected) { // To make sure we don't accidentally loop
+			_check_selected.setChecked( selected );
+		}
 	}
 }

@@ -14,49 +14,49 @@ import android.widget.Toast;
 public class LoggerTabs extends TabActivity {
 	public static final int ACTIVITY_ID_EDIT_EVENT_TYPES = 1;
 
-	protected TabHost tabHost;
+	protected TabHost _tabHost;
 
 	public void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.main );
 
 		Resources res = getResources();
-		tabHost = getTabHost();
+		_tabHost = getTabHost();
 		TabHost.TabSpec spec;
 		Intent intent;
 
 		// Create LifeLogger activity and put it in
 		intent = new Intent().setClass( this, LifeLoggerActivity.class );
-		spec = tabHost
+		spec = _tabHost
 				.newTabSpec( "logger" )
 				.setIndicator(
 						res.getString( R.string.tab_log ),
 						res.getDrawable( R.drawable.tab_log )
 					)
 				.setContent( intent );
-		tabHost.addTab( spec );
+		_tabHost.addTab( spec );
 
 		// Add the Export Data activity
 		intent = new Intent().setClass( this, ExportDataActivity.class );
-		spec = tabHost
+		spec = _tabHost
 				.newTabSpec( "export" )
 				.setIndicator(
 						res.getString( R.string.tab_export ),
 						res.getDrawable( R.drawable.tab_export )
 					)
 				.setContent( intent );
-		tabHost.addTab( spec );
+		_tabHost.addTab( spec );
 
 		// Statistics
 		intent = new Intent().setClass( this, StatisticsActivity.class );
-		spec = tabHost
+		spec = _tabHost
 				.newTabSpec( "stats" )
 				.setIndicator(
 						res.getString( R.string.tab_stats ),
 						res.getDrawable( R.drawable.tab_stats )
 					)
 				.setContent( intent );
-		tabHost.addTab( spec );
+		_tabHost.addTab( spec );
 	}
 
 	/*************************************** Menu ******************************************************/
@@ -91,9 +91,17 @@ public class LoggerTabs extends TabActivity {
 						R.string.events_updated,
 						Toast.LENGTH_SHORT
 					).show();
+				
+				refreshActivities();
 			}
-			
-			LifeLoggerActivity.refresh();
 		}
+	}
+
+	/*************************************** Private Functions *****************************************/
+	protected void refreshActivities() {
+		LifeLoggerActivity.refresh();
+		ExportDataActivity.refresh();
+		StatisticsActivity.refresh();
+		
 	}
 }

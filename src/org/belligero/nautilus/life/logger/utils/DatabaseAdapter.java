@@ -191,7 +191,7 @@ public class DatabaseAdapter {
 	
 	public class EventHandler {
 		/********************************** Insert, Update, Delete *****************************************/
-		public long insertEvent( Event event ) {
+		public Event insertEvent( Event event ) {
 			ContentValues values = new ContentValues();
 			values.put(
 					Event.TIME,
@@ -202,11 +202,17 @@ public class DatabaseAdapter {
 					event.getEventTypeID()
 				);
 			
-			return _dbConnection.insert(
+			long id = _dbConnection.insert(
 					TABLE_EVENT,
 					null,
 					values
 				);
+			
+			if ( id < 0 ) {
+				throw new RuntimeException( "Error occured inserting new Event" );
+			}
+			
+			return event.setID( id );
 		}
 		
 		public long deleteEventsOfType( long eventTypeID ) {
@@ -221,15 +227,13 @@ public class DatabaseAdapter {
 		
 		public long deleteEvent( Event event ) {
 			String whereClause =
-					Event.EVENT_TYPE + " = ?"
-					+ " AND " + Event.TIME + " = ?";
+					Event.ID + " = ?";
 			
 			return _dbConnection.delete(
 					TABLE_EVENT,
 					whereClause,
 					new String[] {
-							Long.toString( event.getEventTypeID() ),
-							Long.toString( event.getTimeStamp() )
+							Long.toString( event.getID() )
 						}
 				);
 		}
@@ -237,6 +241,7 @@ public class DatabaseAdapter {
 		/********************************** Select, Retrieve ***********************************************/
 		public EventIterator fetchAllEvents() {
 			String[] columns = new String[]{
+					Event.ID,
 					Event.TIME,
 					Event.EVENT_TYPE
 				};
@@ -256,6 +261,7 @@ public class DatabaseAdapter {
 		
 		public EventIterator fetchAllEventsOfType( int eventTypeID ) {
 			String[] columns = new String[]{
+					Event.ID,
 					Event.TIME,
 					Event.EVENT_TYPE
 				};
@@ -304,6 +310,7 @@ public class DatabaseAdapter {
 		
 		public EventIterator fetchRecentEvents() {
 			String[] columns = new String[]{
+					Event.ID,
 					Event.TIME,
 					Event.EVENT_TYPE
 				};
@@ -324,6 +331,7 @@ public class DatabaseAdapter {
 		
 		public EventIterator fetchRecentEvents( long eventTypeID ) {
 			String[] columns = new String[]{
+					Event.ID,
 					Event.TIME,
 					Event.EVENT_TYPE
 				};
