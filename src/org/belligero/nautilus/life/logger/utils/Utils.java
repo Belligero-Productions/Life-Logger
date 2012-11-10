@@ -1,39 +1,56 @@
 package org.belligero.nautilus.life.logger.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import org.belligero.nautilus.LifeLogger;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 
 public class Utils {
 	// TODO Format the output of these better
 	public static final String getTimeString( long timestamp ) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis( timestamp * 1000 );
-		return getTimeString(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
+		return DateUtils.formatDateTime(
+				LifeLogger.getContext(),
+				timestamp * 1000,
+				DateUtils.FORMAT_SHOW_TIME
+			);
 	}
 	
 	public static final String getTimeString(Calendar cal) {
-		return getTimeString(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
+		return getTimeString( cal.getTimeInMillis() / 1000 ); // Dividing by 1000 so getTimeString(long) doesn't have to care
 	}
 	
 	public static final String getTimeString(int hour, int minute) {
-		return hour + ":" + (minute <= 9 ? "0"+minute : minute);
+		Calendar cal = Calendar.getInstance();
+		cal.set( Calendar.HOUR_OF_DAY, hour );
+		cal.set( Calendar.MINUTE, minute );
+		
+		return getTimeString( cal );
 	}
 	
 	public static final String getDateString( long timestamp ) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis( timestamp * 1000 );
-		return getDateString(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+		
+		return DateUtils.formatDateTime(
+				LifeLogger.getContext(),
+				timestamp * 1000,
+				DateUtils.FORMAT_ABBREV_ALL
+			);
 	}
 	
 	public static final String getDateString(Calendar cal) {
-		return getDateString(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+		return getDateString( cal.getTimeInMillis() / 1000 ); // Dividing by 1000 so getDateString(long) doesn't have to care
 	}
 	
 	public static final String getDateString(int year, int month, int day) {
-		return year + "-" + (month < 9 ? "0"+(month+1) : month+1) + "-" + (day <= 9 ? "0"+day : day);
+		Calendar cal = Calendar.getInstance();
+		cal.set( year, month, day );
+		
+		return getDateString( cal );
 	}
 	
 	/**

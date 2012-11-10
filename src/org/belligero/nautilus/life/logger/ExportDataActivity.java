@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.util.Calendar;
 
+import org.belligero.nautilus.LifeLogger;
 import org.belligero.nautilus.life.logger.ojects.Event;
 import org.belligero.nautilus.life.logger.ojects.EventIterator;
 import org.belligero.nautilus.life.logger.ojects.EventType;
@@ -16,6 +17,7 @@ import org.belligero.nautilus.life.logger.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -123,6 +125,7 @@ public class ExportDataActivity extends Activity {
     }
     
     private String getOutputString() {
+    	// TODO Run this in a background thread
     	StringBuilder ret = new StringBuilder();
     	Calendar cal = Calendar.getInstance();
     	
@@ -139,8 +142,10 @@ public class ExportDataActivity extends Activity {
     			EventIterator iterator = _dbHelper.eventHandler.fetchAllEventsOfType( i+1 );
     			for ( Event event : iterator ) {
 					cal.setTimeInMillis( event.getTimeStamp() * 1000 );
+					
 					ret.append(
-							'"' + Utils.getDateString(cal) + ' ' + Utils.getTimeString(cal)
+							'"' + this.getDateString( cal )
+							+ "\",\"" + this.getTimeString( cal )
 							+ "\",\"" + eventType.getName()
 							+ "\"\n"
 						);
@@ -150,5 +155,22 @@ public class ExportDataActivity extends Activity {
     	} // for
     	
     	return ret.toString();
+    }
+    
+    protected String getDateString( Calendar cal ) {
+    	return String.format(
+    			"%4d-%02d-%02d",
+    			cal.get( Calendar.YEAR ),
+    			cal.get( Calendar.MONTH ),
+    			cal.get( Calendar.DAY_OF_MONTH )
+			);
+    }
+    
+    protected String getTimeString( Calendar cal ) {
+    	return DateUtils.formatDateTime(
+    			LifeLogger.getContext(),
+    			cal.getTimeInMillis(),
+				DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_24HOUR
+			);
     }
 }

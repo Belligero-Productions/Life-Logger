@@ -1,6 +1,8 @@
 package org.belligero.nautilus.life.logger;
 
 import java.util.Calendar;
+
+import org.belligero.nautilus.LifeLogger;
 import org.belligero.nautilus.life.logger.ojects.Event;
 import org.belligero.nautilus.life.logger.ojects.EventIterator;
 import org.belligero.nautilus.life.logger.ojects.EventType;
@@ -16,6 +18,8 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
@@ -158,8 +162,22 @@ public class LifeLoggerActivity extends Activity {
 	}
 
 	private void updateDateTime() {
-		btn_date.setText(Utils.getDateString(_year, _month, _day));
-		btn_time.setText(Utils.getTimeString(_hour, _minute));
+		Calendar cal = Calendar.getInstance();
+		cal.set( _year, _month, _day, _hour, _minute );
+		
+		String date = DateUtils.formatDateTime(
+				LifeLogger.getContext(),
+				cal.getTimeInMillis(),
+				DateUtils.FORMAT_ABBREV_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR
+			);
+		String time = DateUtils.formatDateTime(
+				LifeLogger.getContext(),
+				cal.getTimeInMillis(),
+				DateUtils.FORMAT_SHOW_TIME
+			);
+		
+		btn_date.setText( date );
+		btn_time.setText( time );
 	}
 	
 	private void deleteEvent( Event event ) {
@@ -230,7 +248,8 @@ public class LifeLoggerActivity extends Activity {
 		case DIALOG_ID_DATE:
 			return new DatePickerDialog(this, _dateSetListener, _year, _month, _day);
 		case DIALOG_ID_TIME:
-			return new TimePickerDialog(this, _timeSetListener, _hour, _minute, true); // true = is 24 hour
+			boolean is24h = DateFormat.is24HourFormat( LifeLogger.getContext() );
+			return new TimePickerDialog(this, _timeSetListener, _hour, _minute, is24h);
 		}
 		return null;
 	}
