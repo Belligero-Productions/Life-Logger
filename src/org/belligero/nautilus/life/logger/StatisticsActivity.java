@@ -60,7 +60,7 @@ public class StatisticsActivity extends Activity {
 	private void setupSpinner() {
 		List<CharSequence> arr = new ArrayList<CharSequence>();
 		
-		EventTypeIterator iterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
+		EventTypeIterator iterator = _dbHelper.eventTypeHandler.fetchAll();
 		for (EventType eventType : iterator) {
 			arr.add( eventType.getName() );
 		}
@@ -158,7 +158,7 @@ public class StatisticsActivity extends Activity {
 		}
 		
 		public void run() {
-			EventIterator iterator = _dbHelper.eventHandler.fetchAllEventsOfType( _eventTypeName );
+			EventIterator iterator = _dbHelper.eventHandler.fetchByType( _eventTypeName );
 			
 			Calendar startDate = null, endDate = null, tempDate;
 			Calendar currDate = Calendar.getInstance();

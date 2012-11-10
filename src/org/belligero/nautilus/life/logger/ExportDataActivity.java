@@ -76,7 +76,7 @@ public class ExportDataActivity extends Activity {
     private void fillData() {
     	_exportEventLines.removeAllViews();
     	
-    	EventTypeIterator iterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
+    	EventTypeIterator iterator = _dbHelper.eventTypeHandler.fetchAll();
     	for (EventType eventType : iterator) {
     		_exportEventLines.addView(
     				new ExportEventLineView( this, eventType )
@@ -139,7 +139,7 @@ public class ExportDataActivity extends Activity {
     		
     		if ( eventLine.isSelected() ) {
     			
-    			EventIterator iterator = _dbHelper.eventHandler.fetchAllEventsOfType( i+1 );
+    			EventIterator iterator = _dbHelper.eventHandler.fetchByType( i+1 );
     			for ( Event event : iterator ) {
 					cal.setTimeInMillis( event.getTimeStamp() * 1000 );
 					

@@ -72,7 +72,7 @@ public class EditEventTypesActivity extends Activity {
     private void fillData() {    	
     	_eventTypeLines.removeAllViews();
     	
-    	EventTypeIterator iterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
+    	EventTypeIterator iterator = _dbHelper.eventTypeHandler.fetchAll();
     	for (EventType eventType : iterator) {
     		_eventTypeLines.addView(
     				new EditEventTypeLineView(
@@ -139,14 +139,14 @@ public class EditEventTypesActivity extends Activity {
     	if ( eventLine.isDeleted() ) {
     		// Only delete if it's not new, and we've confirmed we want to delete
     		if ( eventType.getID() > 0 && _confirmDelete == CONFIRM_DELETE ) {
-    			_dbHelper.eventTypeHandler.deleteEventType( eventType );
+    			_dbHelper.eventTypeHandler.delete( eventType );
     		}
     	} else {
     		if ( eventType.getID() == 0 ) { // New
-        		eventType = _dbHelper.eventTypeHandler.insertEventType( eventType );
+        		eventType = _dbHelper.eventTypeHandler.insert( eventType );
         		eventLine.setEventType( eventType );
         	} else { // Updating
-        		_dbHelper.eventTypeHandler.updateEventType( eventType );
+        		_dbHelper.eventTypeHandler.update( eventType );
         	}	
     	}
     }

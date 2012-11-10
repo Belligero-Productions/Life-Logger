@@ -84,7 +84,7 @@ public class LifeLoggerActivity extends Activity {
 				cal.getTimeInMillis() / 1000
 			);
 		
-		_dbHelper.eventHandler.insertEvent( event );
+		_dbHelper.eventHandler.insert( event );
 		
 		_eventListLoader.addRow( event, eventType, true );
 	}
@@ -96,9 +96,9 @@ public class LifeLoggerActivity extends Activity {
 	public void showRecent( EventType eventType ) {		
 		EventIterator iterator;
 		if ( eventType == null ) {
-			iterator = _dbHelper.eventHandler.fetchRecentEvents();
+			iterator = _dbHelper.eventHandler.fetchRecent();
 		} else {
-			iterator = _dbHelper.eventHandler.fetchRecentEvents( eventType.getID() );
+			iterator = _dbHelper.eventHandler.fetchRecent( eventType.getID() );
 		}
 
 		EventListLoader loader
@@ -120,7 +120,7 @@ public class LifeLoggerActivity extends Activity {
 		_logButtons.removeAllViews();
 		
 		// Load the buttons
-		EventTypeIterator eventTypeIterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
+		EventTypeIterator eventTypeIterator = _dbHelper.eventTypeHandler.fetchAll();
 		for (EventType eventType : eventTypeIterator) {
 			if (eventType.isActive()) {
 				_logButtons.addView(
@@ -182,7 +182,7 @@ public class LifeLoggerActivity extends Activity {
 	
 	private void deleteEvent( Event event ) {
 		if ( event != null ) {
-			_dbHelper.eventHandler.deleteEvent( event );
+			_dbHelper.eventHandler.delete( event );
 			
 			_eventListLoader.removeRow( event );
 		}
@@ -203,7 +203,7 @@ public class LifeLoggerActivity extends Activity {
 		switch ( v.getId() ) {
 		case R.id.view_eventRow:
 			event = (Event) v.getTag();
-			eventType = (EventType) _dbHelper.eventTypeHandler.fetchEventTypeWithID( event.getEventTypeID() );
+			eventType = (EventType) _dbHelper.eventTypeHandler.fetchByID( event.getEventTypeID() );
 
 			// TODO make a single function to combine these
 			title = eventType.getName()

@@ -40,7 +40,7 @@ public class EventListLoader {
 		_container.removeAllViews();
 		
 		// Get a ID-eventType mapping
-		EventTypeIterator typeIterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
+		EventTypeIterator typeIterator = _dbHelper.eventTypeHandler.fetchAll();
 		HashMap<Long, EventType> typeMapping
 				= new HashMap<Long, EventType>( typeIterator.count() );
 		
