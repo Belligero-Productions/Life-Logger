@@ -9,19 +9,21 @@ import org.belligero.nautilus.life.logger.ojects.Event;
 import org.belligero.nautilus.life.logger.ojects.EventIterator;
 import org.belligero.nautilus.life.logger.ojects.EventType;
 import org.belligero.nautilus.life.logger.ojects.EventTypeIterator;
+import org.belligero.nautilus.life.logger.utils.ConfirmResultListener;
 import org.belligero.nautilus.life.logger.utils.DatabaseAdapter;
 import org.belligero.nautilus.life.logger.utils.Utils;
 import org.belligero.nautilus.life.logger.views.ExportEventLineView;
 import org.belligero.nautilus.life.logger.R;
 
 import android.app.Activity;
+import android.media.audiofx.AudioEffect.OnControlStatusChangeListener;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.format.DateUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class ExportDataActivity extends Activity {
@@ -33,8 +35,9 @@ public class ExportDataActivity extends Activity {
 	
 	private Button _btn_export;
 	private EditText _edit_fileName;
+	private ViewGroup _exportEventLines;
 	
-	private LinearLayout _exportEventLines;
+	private boolean _confirmOverwrite = false;
 	
 	private static ExportDataActivity _instance;
 	
@@ -46,7 +49,7 @@ public class ExportDataActivity extends Activity {
 		_dbHelper = new DatabaseAdapter(this).open();
 		_instance = this;
 		
-		_exportEventLines = (LinearLayout) findViewById( R.id.container_exportEvents );
+		_exportEventLines = (ViewGroup) findViewById( R.id.container_exportEvents );
 		_btn_export = (Button) findViewById( R.id.btn_exportData );
 		_edit_fileName = (EditText) findViewById( R.id.edit_fileName );
 		
@@ -83,6 +86,23 @@ public class ExportDataActivity extends Activity {
 				);
     	}
     }
+    
+    protected String getDateString( Calendar cal ) {
+    	return String.format(
+    			"%4d-%02d-%02d",
+    			cal.get( Calendar.YEAR ),
+    			cal.get( Calendar.MONTH ),
+    			cal.get( Calendar.DAY_OF_MONTH )
+			);
+    }
+    
+    protected String getTimeString( Calendar cal ) {
+    	return DateUtils.formatDateTime(
+    			LifeLogger.getContext(),
+    			cal.getTimeInMillis(),
+				DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_24HOUR
+			);
+    }
 
 	/*************************************** Export Functions ******************************************/
     private boolean exportData() {
@@ -92,8 +112,21 @@ public class ExportDataActivity extends Activity {
     	
     	try {
     		File root = Environment.getExternalStorageDirectory();
+    		String filePath = root + "/" + fileName;
     		if (root.canWrite()) {
-    			printStream = new PrintStream( root + "/" + fileName );
+    			File outFile = new File( filePath );
+    			// Make sure we want to overwrite
+    			if ( !_confirmOverwrite && outFile.exists() ) {
+    				Utils.confirm(
+    						this,
+    						R.string.confirm_overwriteTitle,
+    						R.string.confirm_overwrite,
+    						confirmOverwriteListener
+						);
+    				return false;
+    			}
+    			
+    			printStream = new PrintStream( filePath );
     			String output = getOutputString();
     			printStream.print( output );
     			
@@ -121,6 +154,7 @@ public class ExportDataActivity extends Activity {
     		ret = false;
     	}
     	
+    	_confirmOverwrite = false;
     	return ret;
     }
     
@@ -157,20 +191,18 @@ public class ExportDataActivity extends Activity {
     	return ret.toString();
     }
     
-    protected String getDateString( Calendar cal ) {
-    	return String.format(
-    			"%4d-%02d-%02d",
-    			cal.get( Calendar.YEAR ),
-    			cal.get( Calendar.MONTH ),
-    			cal.get( Calendar.DAY_OF_MONTH )
-			);
-    }
+
+	/*************************************** Handlers **************************************************/
     
-    protected String getTimeString( Calendar cal ) {
-    	return DateUtils.formatDateTime(
-    			LifeLogger.getContext(),
-    			cal.getTimeInMillis(),
-				DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_24HOUR
-			);
-    }
+    private ConfirmResultListener confirmOverwriteListener = new ConfirmResultListener() {
+		
+		public void deny() {
+			_confirmOverwrite = false;
+		}
+		
+		public void confirm() {
+			_confirmOverwrite = true;
+			exportData();
+		}
+	};
 }

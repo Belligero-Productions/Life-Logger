@@ -44,6 +44,8 @@
     <string name="export_fileName">lifeLogger.csv</string>
     <string name="export_complete">File was successfully exported</string>
     <string name="export_error">An error occured writing the file</string>
+    <string name="confirm_overwriteTitle">File Exists</string>
+    <string name="confirm_overwrite">This file already exists. Would you like to overwrite it?</string>
     
     <!-- Statistics -->
     <string name="header_selectEvent">Select Event</string>
