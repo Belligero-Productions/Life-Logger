@@ -49,16 +49,22 @@ public class DatabaseAdapter {
 					"(5, 'Slept', 1)";
 			*/
 			
-			String sql = "INSERT INTO event_type(id, type_name, active) VALUES (1, 'Drank Coffee', 1)";
-			db.execSQL(sql);
-			sql = "INSERT INTO event_type(id, type_name, active) VALUES (2, 'Drank Tea', 1)";
-			db.execSQL(sql);
-			sql = "INSERT INTO event_type(id, type_name, active) VALUES (3, 'Took Pills', 1)";
-			db.execSQL(sql);
-			sql = "INSERT INTO event_type(id, type_name, active) VALUES (4, 'Exercised', 1)";
-			db.execSQL(sql);
-			sql = "INSERT INTO event_type(id, type_name, active) VALUES (5, 'Slept', 1)";
-			db.execSQL(sql);
+			String[] eventTypes = {
+				"Drank Coffee",
+				"Washroom",
+				"Took Pills",
+				"Smoked",
+				"Exercised",
+			};
+
+			ContentValues contentValues = new ContentValues();
+			contentValues.put( EventType.ACTIVE, 1 );
+			
+			for ( int i = 0; i < eventTypes.length; i++ ) {
+				contentValues.put( EventType.NAME, eventTypes[i] );
+				
+				db.insert( TABLE_EVENT_TYPE, null, contentValues );
+			}
 		}
 
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -315,11 +321,19 @@ public class DatabaseAdapter {
 					Event.EVENT_TYPE
 				};
 			
+			//_dbConnection.query( table, columns, selection, selectionArgs, groupBy, having, orderBy );
+			
 			return new EventIterator(
 					_dbConnection.query(
 							TABLE_EVENT,
 							columns,
-							null,
+							String.format(
+									"%s IN (SELECT %s FROM %s WHERE %s = 1)",
+									Event.EVENT_TYPE,
+									EventType.ID,
+									TABLE_EVENT_TYPE,
+									EventType.ACTIVE
+								),
 							null,
 							null,
 							null,
