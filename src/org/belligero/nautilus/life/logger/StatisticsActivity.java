@@ -79,7 +79,6 @@ public class StatisticsActivity extends Activity {
 	
 	/*************************************** Handlers **************************************************/
 	private class OnEventSelectedListener implements OnItemSelectedListener {
-		@SuppressWarnings( "deprecation" )
 		public void onItemSelected( AdapterView<?> parent, View view, int position, long id ) {
 			_eventTypeName = parent.getItemAtPosition( position ).toString();
 			showDialog( DIALOG_PROGRESS );
@@ -121,6 +120,7 @@ public class StatisticsActivity extends Activity {
 	final Handler handler = new Handler() {
 		@SuppressWarnings( "deprecation" )
 		public void handleMessage(Message msg) {
+			@SuppressWarnings( "unchecked" )
 			HashMap<String, Integer> values = (HashMap<String, Integer>)msg.obj;
 			
 			

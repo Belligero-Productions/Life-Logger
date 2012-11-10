@@ -7,11 +7,8 @@ import org.belligero.nautilus.life.logger.ojects.EventType;
 import org.belligero.nautilus.life.logger.ojects.EventTypeIterator;
 import org.belligero.nautilus.life.logger.utils.DatabaseAdapter;
 import org.belligero.nautilus.life.logger.utils.EventListLoader;
-import org.belligero.nautilus.life.logger.utils.LoggerContextMenuInfo;
 import org.belligero.nautilus.life.logger.utils.Utils;
-import org.belligero.nautilus.life.logger.views.EventListRowView;
 import org.belligero.nautilus.life.logger.views.LogEventLineView;
-import org.belligero.nautilus.life.logger.views.StatsRowView;
 import org.belligero.nautilus.life.logger.R;
 
 import android.app.Activity;
@@ -19,7 +16,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
@@ -27,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class LifeLoggerActivity extends Activity {
 	@SuppressWarnings( "unused" )
@@ -150,14 +145,12 @@ public class LifeLoggerActivity extends Activity {
 		updateDateTime();
 		
 		btn_date.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings( "deprecation" )
 			public void onClick(View v) {
 				showDialog(DIALOG_ID_DATE);
 			}
 		});
 		
 		btn_time.setOnClickListener(new View.OnClickListener() {
-			@SuppressWarnings( "deprecation" )
 			public void onClick(View v) {
 				showDialog(DIALOG_ID_TIME);
 			}

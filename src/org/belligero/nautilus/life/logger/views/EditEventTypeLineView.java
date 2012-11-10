@@ -23,8 +23,6 @@ public class EditEventTypeLineView extends RelativeLayout {
 	private EditText _edit_name;
 	private ToggleButton _toggle_isActive;
 	
-	private EditEventTypeLineView _instance;
-	
 	public EditEventTypeLineView(Context context, EventType eventType) {
 		super(context);
 		addView(
@@ -37,8 +35,6 @@ public class EditEventTypeLineView extends RelativeLayout {
 		
 		_eventType = eventType;
 		_editTypesActivity = (EditEventTypesActivity)context;
-		_instance = this;
-		
 		// Get our controls
 		_check_selected = (CheckBox)this.findViewById( R.id.check_selectEventType );
 		_edit_name = (EditText)this.findViewById( R.id.edit_eventName );

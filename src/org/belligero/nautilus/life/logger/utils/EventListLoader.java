@@ -49,12 +49,8 @@ public class EventListLoader {
 		}
 		
 		// Actually add the views
-		View rowView;
-		
 		for ( Event event : eventIterator ) {
-			rowView = addRow( event, typeMapping.get( event.getEventTypeID() ), false );
-//			rowView.setOnClickListener( onClickListener );
-//			rowView.setOnLongClickListener( onLongClickListener );
+			addRow( event, typeMapping.get( event.getEventTypeID() ), false );
 		}
 	}
 	

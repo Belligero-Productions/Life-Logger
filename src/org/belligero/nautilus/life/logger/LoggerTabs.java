@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.widget.TabHost;
 import android.widget.Toast;
 
-@SuppressWarnings( "deprecation" )
 public class LoggerTabs extends TabActivity {
 	public static final int ACTIVITY_ID_EDIT_EVENT_TYPES = 1;
 
