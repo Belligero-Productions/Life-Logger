@@ -40,7 +40,6 @@
 				/>
 			<TextView android:id="@+id/stats_total"
 				android:gravity="right"
-				android:text="0"
 				/>
 		</TableRow>
 		<TableRow>
@@ -49,7 +48,6 @@
 				/>
 			<TextView android:id="@+id/stats_activeDailyAverage"
 				android:gravity="right"
-				android:text="0"
 				/>
 		</TableRow>
 		<TableRow>
@@ -58,7 +56,6 @@
 				/>
 			<TextView android:id="@+id/stats_totalDailyAverage"
 				android:gravity="right"
-				android:text="0"
 				/>
 		</TableRow>
 	</TableLayout>

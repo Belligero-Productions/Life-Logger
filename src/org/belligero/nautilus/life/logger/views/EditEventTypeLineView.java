@@ -6,7 +6,6 @@ import org.belligero.nautilus.life.logger.ojects.EventType;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;

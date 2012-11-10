@@ -23,6 +23,21 @@ public class EventType {
 		_isActive = isActive;
 		_name = name;
 	}
+	
+	@Override
+	public boolean equals( Object obj ) {
+		if ( obj != null && obj instanceof EventType ) {
+			EventType eventType = (EventType) obj;
+			
+			return eventType.getID() == this.getID()
+					&& eventType.isActive() == this.isActive()
+					&& eventType.getName().equals( this.getName() );
+		}
+		
+		return false;
+	}
+
+	/**** Getters & Setters ****/
 
 	public long getID() {
 		return _id;

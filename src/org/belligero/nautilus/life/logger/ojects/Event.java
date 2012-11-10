@@ -34,6 +34,18 @@ public class Event {
 		_timeStamp = timeStamp;
 	}
 	
+	@Override
+	public boolean equals( Object obj ) {
+		if ( obj != null && obj instanceof Event ) {
+			Event event = (Event) obj;
+			return event.getID() == this.getID()
+					&& event.getEventTypeID() == this.getEventTypeID()
+					&& event.getTimeStamp() == this.getTimeStamp();
+		}
+	
+		return false;
+	}
+	
 	/**** Getters & Setters ****/
 	
 	public long getID() {

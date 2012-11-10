@@ -59,6 +59,9 @@
     
     
     <!-- Tag Keys -->
-    <string name="key_eventTypeName">Event Type Name</string>
-    <string name="key_eventTypeID">Event Type ID</string>
+    <string name="tag_event">Event</string>
+    <string name="tag_eventType">Event Type</string>
+    <string name="tag_eventID">Event ID</string>
+    <string name="tag_eventTypeName">Event Type Name</string>
+    <string name="tag_eventTypeID">Event Type ID</string>
 </resources>

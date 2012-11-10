@@ -1,16 +1,17 @@
 package org.belligero.nautilus.life.logger;
 
 import java.util.Calendar;
-import java.util.HashMap;
-
 import org.belligero.nautilus.life.logger.ojects.Event;
 import org.belligero.nautilus.life.logger.ojects.EventIterator;
 import org.belligero.nautilus.life.logger.ojects.EventType;
 import org.belligero.nautilus.life.logger.ojects.EventTypeIterator;
 import org.belligero.nautilus.life.logger.utils.DatabaseAdapter;
 import org.belligero.nautilus.life.logger.utils.EventListLoader;
+import org.belligero.nautilus.life.logger.utils.LoggerContextMenuInfo;
 import org.belligero.nautilus.life.logger.utils.Utils;
+import org.belligero.nautilus.life.logger.views.EventListRowView;
 import org.belligero.nautilus.life.logger.views.LogEventLineView;
+import org.belligero.nautilus.life.logger.views.StatsRowView;
 import org.belligero.nautilus.life.logger.R;
 
 import android.app.Activity;
@@ -18,9 +19,15 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class LifeLoggerActivity extends Activity {
 	@SuppressWarnings( "unused" )
@@ -39,7 +46,7 @@ public class LifeLoggerActivity extends Activity {
 	private DatabaseAdapter _dbHelper;
 	private EventListLoader _eventListLoader;
 	
-	private LinearLayout _logButtons;
+	private ViewGroup _logButtons;
 	
 	private static LifeLoggerActivity instance;
 
@@ -57,7 +64,8 @@ public class LifeLoggerActivity extends Activity {
 			);
 		
 		// Setup the logging buttons
-		_logButtons = (LinearLayout) findViewById(R.id.container_logButtons);
+		_logButtons = (ViewGroup) findViewById(R.id.container_logButtons);
+		
 		loadData();
 	}
 	
@@ -111,8 +119,6 @@ public class LifeLoggerActivity extends Activity {
 		if (LifeLoggerActivity.instance == null) LifeLoggerActivity.instance = this;
 		
 		_logButtons.removeAllViews();
-
-		Calendar cal = Calendar.getInstance();
 		
 		// Load the buttons
 		EventTypeIterator eventTypeIterator = _dbHelper.eventTypeHandler.fetchAllEventTypes();
@@ -162,8 +168,67 @@ public class LifeLoggerActivity extends Activity {
 		btn_date.setText(Utils.getDateString(_year, _month, _day));
 		btn_time.setText(Utils.getTimeString(_hour, _minute));
 	}
+	
+	private void deleteEvent( Event event ) {
+		if ( event != null ) {
+			_dbHelper.eventHandler.deleteEvent( event );
+			
+			_eventListLoader.removeRow( event );
+		}
+	}
 
 	/*************************************** Handlers **************************************************/
+	
+	/*************************************** Context Menus *********************************************/
+	private View _contextMenuView;
+	
+	@Override
+	public void onCreateContextMenu( ContextMenu menu, View v, ContextMenuInfo menuInfo ) {
+		Event event;
+		EventType eventType;
+		String title = null;
+		int menuResourceID = 0;
+		
+		switch ( v.getId() ) {
+		case R.id.view_eventRow:
+			event = (Event) v.getTag();
+			eventType = (EventType) _dbHelper.eventTypeHandler.fetchEventTypeWithID( event.getEventTypeID() );
+
+			// TODO make a single function to combine these
+			title = eventType.getName()
+					+ " - " + Utils.getDateString( event.getTimeStamp() )
+					+ ", " + Utils.getTimeString( event.getTimeStamp() );
+			menu.setHeaderTitle( title );
+			
+			menuResourceID = R.menu.menu_event;
+			
+			break;
+		}
+		
+		
+		super.onCreateContextMenu( menu, v, menuInfo );
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate( menuResourceID, menu );
+		_contextMenuView = v;
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		Event event;
+		
+		View v = _contextMenuView;
+		
+	    // TODO take into account different menus
+	    
+	    switch (item.getItemId()) {
+	        case R.id.menu_delete:
+	        	event = (Event) v.getTag();
+	            deleteEvent( event );
+	            return true;
+	        default:
+	            return super.onContextItemSelected(item);
+	    }
+	}
 	
 	/*************************************** Dialogs ***************************************************/
 	// Launch the various dialogs

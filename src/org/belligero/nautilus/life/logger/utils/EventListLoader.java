@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.belligero.nautilus.life.logger.R;
 import org.belligero.nautilus.life.logger.ojects.*;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,13 +48,13 @@ public class EventListLoader {
 			typeMapping.put( eventType.getID(), eventType );
 		}
 		
-		// Actually add the viewss
+		// Actually add the views
 		View rowView;
 		
 		for ( Event event : eventIterator ) {
 			rowView = addRow( event, typeMapping.get( event.getEventTypeID() ), false );
-			rowView.setOnClickListener( onClickListener );
-			rowView.setOnLongClickListener( onLongClickListener );
+//			rowView.setOnClickListener( onClickListener );
+//			rowView.setOnLongClickListener( onLongClickListener );
 		}
 	}
 	
@@ -61,6 +62,7 @@ public class EventListLoader {
 	
 	public View addRow( Event event, EventType eventType, boolean toStart ) {
 		_rowView = getRow( event, eventType );
+		Activity parent = (Activity) _context;
 		
 		if ( toStart ) {
 			_container.addView( _rowView, 0 );
@@ -68,7 +70,19 @@ public class EventListLoader {
 			_container.addView( _rowView );
 		}
 		
+		parent.registerForContextMenu( _rowView );
+		
 		return _rowView;
+	}
+	
+	public void removeRow( Event event ) {
+
+		// TODO If possible, put this in a thread
+		this.removeRow( _container.findViewWithTag( event ) );
+	}
+	
+	public void removeRow( View rowView ) {
+		if ( rowView != null ) _container.removeView( rowView );
 	}
 	
 	private View getRow( Event event, EventType eventType ) {

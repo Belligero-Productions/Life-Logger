@@ -7,12 +7,25 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 public class Utils {
+	// TODO Format the output of these better
+	public static final String getTimeString( long timestamp ) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis( timestamp * 1000 );
+		return getTimeString(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
+	}
+	
 	public static final String getTimeString(Calendar cal) {
 		return getTimeString(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
 	}
 	
 	public static final String getTimeString(int hour, int minute) {
 		return hour + ":" + (minute <= 9 ? "0"+minute : minute);
+	}
+	
+	public static final String getDateString( long timestamp ) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis( timestamp * 1000 );
+		return getDateString(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 	}
 	
 	public static final String getDateString(Calendar cal) {
