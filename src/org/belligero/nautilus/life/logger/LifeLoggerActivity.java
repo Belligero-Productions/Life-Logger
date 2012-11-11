@@ -22,6 +22,7 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
@@ -79,6 +80,7 @@ public class LifeLoggerActivity extends Activity {
 		// Setup the logging buttons
 		_logButtons = (ViewGroup) findViewById(R.id.container_logButtons);
 		
+		// TODO This loads too often!
 		loadData();
 	}
 	
@@ -86,6 +88,7 @@ public class LifeLoggerActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 		setupDateTime();
+		loadData();
 	}
 	
 	/*************************************** Public Functions ******************************************/
@@ -124,19 +127,23 @@ public class LifeLoggerActivity extends Activity {
 	}
 	
 	public static void refresh() {
-		if ( instance != null ) LifeLoggerActivity.instance.loadData();
+		// There were issues with this...
 	}
 	
 	/*************************************** Helper Functions ******************************************/
+	int loadCount = 0;
 	private void loadData() {
 		if (LifeLoggerActivity.instance == null) LifeLoggerActivity.instance = this;
 		
+		Log.d( TAG, "Loading Data" );
 		_logButtons.removeAllViews();
 		
 		// Load the buttons
 		EventTypeIterator eventTypeIterator = _dbHelper.eventTypeHandler.fetchAll();
 		for (EventType eventType : eventTypeIterator) {
+			Log.d( TAG, eventType.getName() + " is " + (eventType.isActive() ? "active" : "not active") );
 			if (eventType.isActive()) {
+				Log.d( TAG, "Adding view" );
 				_logButtons.addView(
 						new LogEventLineView(
 								this,
