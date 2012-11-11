@@ -8,6 +8,8 @@ import org.belligero.nautilus.life.logger.utils.Utils;
 import org.belligero.nautilus.life.logger.views.EditEventTypeLineView;
 import org.belligero.nautilus.life.logger.R;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -38,6 +40,19 @@ public class EditEventTypesActivity extends Activity {
 	private ImageButton _btn_delete;
 	
 	/********************************** Lifecycle Functions ********************************************/
+	@Override
+	public void onStart() {
+		super.onStart();
+		EasyTracker.getInstance().activityStart( this ); 
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		EasyTracker.getInstance().activityStop( this );
+	}
+	
+	@Override
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.edit_event_types);

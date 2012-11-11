@@ -8,6 +8,8 @@ import java.util.List;
 import org.belligero.nautilus.life.logger.ojects.*;
 import org.belligero.nautilus.life.logger.utils.DatabaseAdapter;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -38,6 +40,18 @@ public class StatisticsActivity extends Activity {
 	private DatabaseAdapter _dbHelper;
 
 	/********************************** Life cycle Functions *******************************************/
+	@Override
+	public void onStart() {
+		super.onStart();
+		EasyTracker.getInstance().activityStart( this ); 
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		EasyTracker.getInstance().activityStop( this );
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

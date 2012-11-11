@@ -15,6 +15,8 @@ import org.belligero.nautilus.life.logger.utils.Utils;
 import org.belligero.nautilus.life.logger.views.ExportEventLineView;
 import org.belligero.nautilus.life.logger.R;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.app.Activity;
 import android.media.audiofx.AudioEffect.OnControlStatusChangeListener;
 import android.os.Bundle;
@@ -42,6 +44,19 @@ public class ExportDataActivity extends Activity {
 	private static ExportDataActivity _instance;
 	
 	/********************************** Lifecycle Functions ********************************************/
+	@Override
+	public void onStart() {
+		super.onStart();
+		EasyTracker.getInstance().activityStart( this ); 
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		EasyTracker.getInstance().activityStop( this );
+	}
+	
+	@Override
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.export_data);

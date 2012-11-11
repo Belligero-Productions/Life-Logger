@@ -1,5 +1,7 @@
 package org.belligero.nautilus.life.logger;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -14,6 +16,19 @@ public class LoggerTabs extends TabActivity {
 	public static final int ACTIVITY_ID_EDIT_EVENT_TYPES = 1;
 
 	protected TabHost _tabHost;
+	
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		EasyTracker.getInstance().activityStart( this ); 
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		EasyTracker.getInstance().activityStop( this );
+	}
 
 	public void onCreate( Bundle savedInstanceState ) {
 		super.onCreate( savedInstanceState );
