@@ -58,5 +58,13 @@
 				android:gravity="right"
 				/>
 		</TableRow>
+		<TableRow>
+			<TextView
+				android:text="@string/stats_weeklyAverage"
+				/>
+			<TextView android:id="@+id/stats_weeklyAverage"
+				android:gravity="right"
+				/>
+		</TableRow>
 	</TableLayout>
 </LinearLayout>

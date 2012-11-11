@@ -12,7 +12,6 @@ import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 
 public class Utils {
-	// TODO Format the output of these better
 	public static final String getTimeString( long timestamp ) {
 		return DateUtils.formatDateTime(
 				LifeLogger.getContext(),

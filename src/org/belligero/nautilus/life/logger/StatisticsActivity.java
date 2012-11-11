@@ -16,6 +16,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -145,15 +146,22 @@ public class StatisticsActivity extends Activity {
 				);
 
 			value = values.get("totalDailyAverage").intValue();
-			float display = value/10f;
+			float display = value/100f;
 			view = (TextView) findViewById( R.id.stats_totalDailyAverage );
 			view.setText(
 					Float.toString( display )
 				);
 
 			value = values.get("activeDailyAverage").intValue();
-			display = value / 10f;
+			display = value / 100f;
 			view = (TextView) findViewById( R.id.stats_activeDailyAverage );
+			view.setText(
+					Float.toString( display )
+				);
+			
+			value = values.get("weeklyAverage").intValue();
+			display = value / 100f;
+			view = (TextView) findViewById( R.id.stats_weeklyAverage );
 			view.setText(
 					Float.toString( display )
 				);
@@ -161,6 +169,11 @@ public class StatisticsActivity extends Activity {
 			StatisticsActivity.this.dismissDialog( DIALOG_PROGRESS );
 		}
 	};
+	
+	private static final long
+		MILLIS_PER_HOUR = 60 * 60 * 1000,
+		MILLIS_PER_DAY = 24 * MILLIS_PER_HOUR,
+		MILLIS_PER_WEEK = 7 * MILLIS_PER_DAY;
 	
 	private class StatsCalculator extends Thread {
 		Handler _handler;
@@ -179,6 +192,7 @@ public class StatisticsActivity extends Activity {
 			long time;
 			int activeDays = 0,
 				totalDays = 0,
+				totalWeeks = 0,
 				totalEvents = 0;
 
 			// Loop through events to find the number of "Active" days
@@ -204,17 +218,24 @@ public class StatisticsActivity extends Activity {
 
 			// Calculate the total numbers of days, since the first entry
 			if (startDate != null) {
-				totalDays = (int)((currDate.getTimeInMillis() - startDate.getTimeInMillis()) / (1000 * 60 * 60 * 24));
+				// TODO Fix this for daylight savings issues
+				long timeDiff = (long)( currDate.getTimeInMillis() - startDate.getTimeInMillis() );
+				
+				totalDays = (int)( timeDiff / MILLIS_PER_DAY );
+				totalWeeks = (int)( timeDiff / MILLIS_PER_WEEK );
 			}
 			
 			// Avoid potential division by 0
-			if (totalDays == 0) totalDays = 1;
-			if (activeDays == 0) activeDays = 1;
+			if (totalDays <= 0) totalDays = 1;
+			if (activeDays <= 0) activeDays = 1;
+			if (totalWeeks <= 0) totalWeeks = 1;
 			
+			// TODO Use floats/doubles
 			HashMap<String, Integer> values = new HashMap<String, Integer>();
 			values.put("total", totalEvents);
-			values.put("totalDailyAverage", (totalEvents*10)/totalDays);
-			values.put("activeDailyAverage", (totalEvents*10)/activeDays);
+			values.put("totalDailyAverage", (totalEvents * 100) / totalDays );
+			values.put("activeDailyAverage", (totalEvents * 100) / activeDays );
+			values.put( "weeklyAverage", (totalEvents * 100) / totalWeeks );
 			
 			Message msg = new Message();
 			msg.obj = values;

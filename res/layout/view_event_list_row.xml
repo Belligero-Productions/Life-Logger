@@ -8,6 +8,7 @@
     android:longClickable="true"
     
     style="@style/selectableItem"
+    android:tag="eventListRow"
 >
     
 	<TextView android:id="@+id/text_eventName"

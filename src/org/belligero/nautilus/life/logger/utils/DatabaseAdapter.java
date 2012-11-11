@@ -292,11 +292,12 @@ public class DatabaseAdapter {
 					EventType.ID
 				};
 			
+			// get the event types
 			Cursor cursor =
 				_dbConnection.query(
 						TABLE_EVENT_TYPE,
 						columns,
-						EventType.NAME + "=?",
+						EventType.NAME + " = ?",
 						new String[]{
 								eventTypeName
 							},
@@ -308,7 +309,7 @@ public class DatabaseAdapter {
 			if (cursor != null) {
 				cursor.moveToFirst();
 				
-				int eventTypeID = cursor.getInt(cursor.getColumnIndex(EventType.ID));
+				int eventTypeID = cursor.getInt( cursor.getColumnIndex( EventType.ID ) );
 				
 				return fetchByType(eventTypeID);
 			} else return new EventIterator(null);
