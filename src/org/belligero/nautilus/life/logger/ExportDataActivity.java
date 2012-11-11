@@ -18,7 +18,6 @@ import org.belligero.nautilus.life.logger.R;
 import com.google.analytics.tracking.android.EasyTracker;
 
 import android.app.Activity;
-import android.media.audiofx.AudioEffect.OnControlStatusChangeListener;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.format.DateUtils;

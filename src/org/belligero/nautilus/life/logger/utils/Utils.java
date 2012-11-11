@@ -1,6 +1,5 @@
 package org.belligero.nautilus.life.logger.utils;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.belligero.nautilus.LifeLogger;
@@ -8,7 +7,6 @@ import org.belligero.nautilus.LifeLogger;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 
 public class Utils {
